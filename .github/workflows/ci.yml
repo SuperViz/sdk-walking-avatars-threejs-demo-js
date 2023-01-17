@@ -1,0 +1,48 @@
+name: Publish Package
+on:
+  push:
+    branches:
+      - main
+jobs:
+  main:
+    if: "github.ref == 'refs/heads/main'"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+      - name: create environment files
+        env:
+          DEPLOY_ENV_FILE: ${{ secrets.DEPLOY_ENV }}
+        run: |
+          echo $DEPLOY_ENV_FILE | base64 --decode > .env
+      - run: git config --global user.name SuperViz
+      - run: git config --global user.email ci@superviz.com
+      - name: Install dependencies
+        run: yarn
+      - name: Build package
+        run: yarn build
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Deploy static site to S3 bucket
+        run: aws s3 sync ./dist/ s3://dev-sdk-demo-threejs.superviz.com --delete
+  slackNotification:
+    needs: main
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_ICON: https://avatars.slack-edge.com/2020-11-18/1496892993975_af721d1c045bea2d5a46_48.png
+          MSG_MINIMAL: true
+          SLACK_USERNAME: Deploy DEV SDK DEMO THREEJS
