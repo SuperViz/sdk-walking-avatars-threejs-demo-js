@@ -14,11 +14,14 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { PointerLockControlsCannon } from './PointerLockControlsCannon.js';
 import * as CANNON from 'cannon-es';
+import { threeToCannon, ShapeType } from 'three-to-cannon';
+import { SHAPE_TYPES } from 'cannon-es';
 
 export class IfcScene {
   constructor(id) {
     this.clock = new Clock();
     const self = this;
+    this.ifcModel = null;
     this.canvasId = id;
     this.threeCanvas = document.getElementById(id);
     this.calculateWidthHeight(this);
@@ -41,7 +44,7 @@ export class IfcScene {
 
     // physics
     this.world = new CANNON.World();
-    this.world.gravity.set(0, -9.82, 0);
+    this.world.gravity.set(0, -20, 0);
     const physicsMaterial = new CANNON.Material('physics');
     const physics_physics = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
       friction: 0.0,
@@ -122,19 +125,28 @@ export class IfcScene {
     this.orbitControls.enableDamping = true;
   }
 
-  add(mesh) {
-    let ifcModel = this.scene.add(mesh);
-    this.ifcModels.push(ifcModel);
-
-    const shape = new CANNON.ConvexPolyhedron(mesh.vertices, mesh.faces);
+  add(obj) {
+    this.ifcModel = this.scene.add(obj);
+    this.ifcModels.push(this.ifcModel);
+    /*
+    const result = threeToCannon(obj, {type: ShapeType.MESH});
+    const {shape, offset, quaternion} = result;
 
     const rigidBody = new CANNON.Body({
       mass: 0,
       shape: shape,
     });
 
+    // Add the shape to a CANNON.Body.
     this.world.addBody(rigidBody);
-    this.fitModelToFrame(ifcModel);
+    */
+  const planeShape = new CANNON.Plane()
+  
+  const planeBody = new CANNON.Body({ mass: 0 })
+  planeBody.addShape(planeShape);
+  planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
+  this.world.addBody(planeBody)
+
   }
 
   fitModelToFrame(model) {
@@ -172,11 +184,13 @@ export class IfcScene {
       );
       this.orbitControls.enabled = false;
       this.firstPersonControls.enabled = true;
-      // this.firstPersonControls.lock();
+      this.firstPersonControls.lock();
       this.currentControls = 'firstperson';
     } else {
+      this.firstPersonControls.unlock();
       this.currentControls = 'orbit';
       this.orbitControls.enabled = true;
+      this.fitModelToFrame(this.ifcModel);
       this.orbitControls.reset();
       this.firstPersonControls.enabled = false;
     }

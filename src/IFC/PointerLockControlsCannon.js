@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
+import { Vec3 } from 'cannon-es';
+import { Vector3 } from 'three';
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -18,11 +20,11 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
     this.jumpVelocity = 20;
 
     this.pitchObject = new THREE.Object3D();
-    this.pitchObject.add(camera);
+    this.pitchObject = camera;
 
     this.yawObject = new THREE.Object3D();
     this.yawObject.position.y = 2;
-    this.yawObject.add(this.pitchObject);
+    this.yawObject = camera;
 
     this.quaternion = new THREE.Quaternion();
 
@@ -68,7 +70,7 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
   }
 
   connect() {
-    // document.addEventListener('mousemove', this.onMouseMove);
+    document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('pointerlockchange', this.onPointerlockChange);
     document.addEventListener('pointerlockerror', this.onPointerlockError);
     document.addEventListener('keydown', this.onKeyDown);
@@ -76,7 +78,7 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
   }
 
   disconnect() {
-    // document.removeEventListener('mousemove', this.onMouseMove);
+    document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('pointerlockchange', this.onPointerlockChange);
     document.removeEventListener('pointerlockerror', this.onPointerlockError);
     document.removeEventListener('keydown', this.onKeyDown);
@@ -93,6 +95,8 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
 
   unlock() {
     document.exitPointerLock();
+    // this.yawObject.rotation = new Vector3(0,0,0);
+    this.pitchObject.rotation = new Vector3(0,0,0);
   }
 
   onPointerlockChange = () => {
@@ -104,6 +108,7 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
       this.dispatchEvent(this.unlockEvent);
 
       this.isLocked = false;
+
     }
   };
 
@@ -118,13 +123,28 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
 
     const { movementX, movementY } = event;
 
-    this.yawObject.rotation.y -= movementX * 0.002;
+    const speedX = movementX * 0.001;
+    this.yawObject.rotateOnWorldAxis(new THREE.Vector3(0.0, 1.0, 0.0), -speedX)
+    
+    const speedY = movementY * 0.001;
+    this.yawObject.rotateX(-speedY)
+
+    /*
+    const speed = movementX * 5;
+    var x_axis = new THREE.Vector3( 1, 0, 0 );
+    var quaternion = new THREE.Quaternion;
+    this.yawObject.position.applyQuaternion(quaternion.setFromAxisAngle(x_axis, speed));
+    this.yawObject.up.applyQuaternion(quaternion.setFromAxisAngle(x_axis, speed));
+    */
+
+    /*
     this.pitchObject.rotation.x -= movementY * 0.002;
 
     this.pitchObject.rotation.x = Math.max(
       -Math.PI / 2,
       Math.min(Math.PI / 2, this.pitchObject.rotation.x),
     );
+    */
   };
 
   onKeyDown = (event) => {
@@ -217,11 +237,13 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
     }
 
     // Convert velocity to world coordinates
+    /*
     this.euler.x = this.pitchObject.rotation.x;
     this.euler.y = this.yawObject.rotation.y;
     this.euler.order = 'XYZ';
     this.quaternion.setFromEuler(this.euler);
-    this.inputVelocity.applyQuaternion(this.quaternion);
+    */
+    this.inputVelocity.applyQuaternion(this.yawObject.quaternion);
 
     // Add to the object
     this.velocity.x += this.inputVelocity.x;
