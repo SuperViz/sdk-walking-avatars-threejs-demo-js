@@ -51,7 +51,7 @@
         <tree-view :data="userList"></tree-view>
       </aside>
       <Model
-        modelUrl="/models/rac_advanced_sample_project.ifc"
+        modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
         @loaded="onModelLoaded"
       ></Model>
     </section>
