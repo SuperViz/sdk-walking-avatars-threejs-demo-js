@@ -567,10 +567,10 @@
   resolved "https://registry.yarnpkg.com/@superviz/sv-icons/-/sv-icons-0.6.0.tgz#5ef722b2c88db3d39042a37b4cbdd94a64940acc"
   integrity sha512-1G78XUV70z7caKRtOZqEcFJrifLAI9F1YXfBRu5T+2/Nj1tjMowP+2GUUr1bWGtXSpgj1ek4FtycfuEBPQCr7w==
 
-"@superviz/threejs-adapter@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@superviz/threejs-adapter/-/threejs-adapter-0.0.3.tgz#e72c2441a974a245148fcd1d2375c28cddde57ef"
-  integrity sha512-AlGmAEEl11sdgHpf2tAb0gNl2CDX/jF4YE2Zaz7trDHB8DilSAuX1jaeNjv8X79tBU1jk/vuQkKII8wYNZYsnw==
+"@superviz/threejs-adapter@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@superviz/threejs-adapter/-/threejs-adapter-0.0.4.tgz#fb92ee2106af5bacdedbb4d0eb19291ff2ac6cb9"
+  integrity sha512-SE4hxtdKvgDpYPNXS2uHWe7xOti7mVOFnJ0HeX6ByDD3yOT6B+cBuZxHKbZqNxajpyI6nw8ccZc/uyVxftbudg==
   dependencies:
     three "^0.147.0"
 

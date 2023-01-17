@@ -212,7 +212,7 @@ export default {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
-          renderLocalAvatar: false,
+          renderLocalAvatar: true,
           localAvatarPivotPoint: { x: 0, y: -2, z: 4 },
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
