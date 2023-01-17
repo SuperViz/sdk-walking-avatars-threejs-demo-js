@@ -27,6 +27,8 @@
           <!--          <sv-checkbox label="is broadcasting" v-model="isBroadcasting" />-->
           <sv-checkbox label="enable avatars" v-model="isAvatarsEnabled" />
           <sv-checkbox label="enable pointers" v-model="isPointersEnabled" />
+          <sv-checkbox label="render local avatar" v-model="renderLocalAvatar" />
+
           <sv-button-group wrap>
             <sv-button @click="initialize" :disabled="disableInitializeButton" full-width
               >Initialize SDK</sv-button
@@ -102,7 +104,8 @@ export default {
     isAvatarsEnabled: true,
     camera: null,
     scene: null,
-    threeAdapter: null
+    threeAdapter: null,
+    renderLocalAvatar: true
   }),
   mounted() {
     const url = new URL(window.location.href);
@@ -212,7 +215,7 @@ export default {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
-          renderLocalAvatar: true,
+          renderLocalAvatar: this.renderLocalAvatar,
           localAvatarPivotPoint: { x: 0, y: -2, z: 4 },
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
