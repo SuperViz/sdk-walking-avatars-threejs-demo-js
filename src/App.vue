@@ -51,7 +51,7 @@
         <tree-view :data="userList"></tree-view>
       </aside>
       <Model
-        modelUrl="public/models/rac_advanced_sample_project.ifc"
+        modelUrl="/models/rac_advanced_sample_project.ifc"
         @loaded="onModelLoaded"
       ></Model>
     </section>
