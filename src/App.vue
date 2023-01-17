@@ -60,8 +60,8 @@
 
 <script>
 import Model from './components/Model.vue';
-// import { ThreeAdapter } from '../../threejs-adapter/src';
-import { ThreeAdapter } from '@superviz/threejs-adapter';
+import { ThreeAdapter } from '../../threejs-adapter/src';
+// import { ThreeAdapter } from '@superviz/threejs-adapter';
 
 import SuperViz, {
   MeetingEvent,
@@ -93,22 +93,26 @@ export default {
     userList: '',
     meetingState: MeetingState.FRAME_UNINITIALIZED,
     connectionState: MeetingConnectionStatus.NOT_AVAILABLE,
-    threeAdapterInstance: null,
     avatarUrl:
       'https://superviz2homologmediaserver.s3.amazonaws.com/static/animations/walking_cycle.glb',
     avatarThumbnail: '',
-    avatarScale: '1',
+    avatarScale: '0.2',
     avatarHeight: '0',
     isPointersEnabled: true,
     isAvatarsEnabled: true,
     camera: null,
     scene: null,
+    threeAdapter: null
   }),
   mounted() {
     const url = new URL(window.location.href);
     this.userId = url.searchParams.get('userId') || '';
     this.roomId = url.searchParams.get('roomId') || '';
     this.userName = url.searchParams.get('userName') || '';
+
+    // animations of model
+    document.addEventListener('keydown', this.onKeyDown);
+    document.addEventListener('keyup', this.onKeyUp);
   },
   watch: {
     isAudience(value) {
@@ -194,7 +198,7 @@ export default {
       }
     },
     async initialize3D() {
-      if (this.threeAdapterInstance) {
+      if (this.threeAdapter) {
         this.sdk.disconnectAdapter();
       }
       if (!this.scene) {
@@ -202,18 +206,20 @@ export default {
         return;
       }
       const player = this.camera;
-      const adapter = new ThreeAdapter(this.scene, this.camera, player);
+      this.threeAdapter = new ThreeAdapter(this.scene, this.camera, player);
 
-      this.threeAdapterInstance = this.sdk.connectAdapter(adapter, {
+      this.sdk.connectAdapter(this.threeAdapter, {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
-          renderLocalAvatar: true,
+          renderLocalAvatar: false,
           localAvatarPivotPoint: { x: 0, y: -2, z: 4 },
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
         isPointersEnabled: this.isPointersEnabled,
       });
+
+      window.dispatchEvent(new Event('resize'));
     },
     onModelLoaded({ camera, scene }) {
       console.log('on model loaded!', camera);
@@ -227,9 +233,52 @@ export default {
     onJoinedMeeting() {
       this.initialize3D();
     },
-    get3DUsers() {
-      return this.threeAdapterInstance?.getUsersOn3D();
+    onKeyDown (event) {
+      switch (event.code) {
+        case 'KeyW':
+        case 'ArrowUp':
+        this.threeAdapter.myAvatar.playAnimation("Take 001")
+          break;
+
+        case 'KeyA':
+        case 'ArrowLeft':
+        this.threeAdapter.myAvatar.playAnimation("Take 001")
+          break;
+
+        case 'KeyS':
+        case 'ArrowDown':
+        this.threeAdapter.myAvatar.playAnimation("Take 001")
+          break;
+
+        case 'KeyD':
+        case 'ArrowRight':
+        this.threeAdapter.myAvatar.playAnimation("Take 001")
+          break;
+      }
     },
+    onKeyUp (event) {
+      switch (event.code) {
+        case 'KeyW':
+        case 'ArrowUp':
+        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.stopAnimation("Take 001")
+          break;
+
+        case 'KeyA':
+        case 'ArrowLeft':
+        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.stopAnimation("Take 001")
+          break;
+
+        case 'KeyS':
+        case 'ArrowDown':
+        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.stopAnimation("Take 001")
+          break;
+
+        case 'KeyD':
+        case 'ArrowRight':
+        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.stopAnimation("Take 001")
+          break;
+      }
+    }
   },
   computed: {
     connectionStatusBubble() {

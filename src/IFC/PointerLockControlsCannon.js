@@ -95,8 +95,6 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
 
   unlock() {
     document.exitPointerLock();
-    // this.yawObject.rotation = new Vector3(0,0,0);
-    this.pitchObject.rotation = new Vector3(0,0,0);
   }
 
   onPointerlockChange = () => {
@@ -106,9 +104,7 @@ class PointerLockControlsCannon extends THREE.EventDispatcher {
       this.isLocked = true;
     } else {
       this.dispatchEvent(this.unlockEvent);
-
       this.isLocked = false;
-
     }
   };
 
