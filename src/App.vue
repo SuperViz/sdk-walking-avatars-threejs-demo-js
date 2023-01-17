@@ -240,22 +240,22 @@ export default {
       switch (event.code) {
         case 'KeyW':
         case 'ArrowUp':
-        this.threeAdapter.myAvatar.playAnimation("Take 001")
+        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.playAnimation("Take 001")
           break;
 
         case 'KeyA':
         case 'ArrowLeft':
-        this.threeAdapter.myAvatar.playAnimation("Take 001")
+        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.playAnimation("Take 001")
           break;
 
         case 'KeyS':
         case 'ArrowDown':
-        this.threeAdapter.myAvatar.playAnimation("Take 001")
+        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.playAnimation("Take 001")
           break;
 
         case 'KeyD':
         case 'ArrowRight':
-        this.threeAdapter.myAvatar.playAnimation("Take 001")
+        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.playAnimation("Take 001")
           break;
       }
     },
