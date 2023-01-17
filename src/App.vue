@@ -60,13 +60,16 @@
 
 <script>
 import Model from './components/Model.vue';
-import { ThreeAdapter } from '../../threejs-adapter/src';
+// import { ThreeAdapter } from '../../threejs-adapter/src';
+import { ThreeAdapter } from '@superviz/threejs-adapter';
+
 import SuperViz, {
   MeetingEvent,
   DeviceEvent,
   MeetingState,
   MeetingConnectionStatus,
-} from '../../sdk_/dist';
+} from '@superviz/sdk';
+// } from '../../sdk_/dist';
 import bubble from './components/bubble.vue';
 
 const DEVELOPER_KEY = import.meta.env.VITE_SUPERVIZ_DEVELOPER_TOKEN;

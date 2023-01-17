@@ -8,8 +8,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@superviz/matterport-adapter": "0.0.60",
-    "@superviz/sdk": "2.13.0",
+    "@superviz/threejs-adapter": "0.0.3",
+    "@superviz/sdk": "2.18.0",
     "@superviz/sv-components": "^0.12.57",
     "@superviz/sv-icons": "^0.6.0",
     "@vitejs/plugin-legacy": "^2.0.1",

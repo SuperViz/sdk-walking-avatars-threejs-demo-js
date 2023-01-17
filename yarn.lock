@@ -525,15 +525,10 @@
   dependencies:
     debug "^4.3.4"
 
-"@superviz/matterport-adapter@0.0.60":
-  version "0.0.60"
-  resolved "https://registry.yarnpkg.com/@superviz/matterport-adapter/-/matterport-adapter-0.0.60.tgz#2131510fc147f3591c2b95c48976fc11e867f7fa"
-  integrity sha512-AzuPitRaNV3Kg0E4m5fyUZLrooxVjgsRWAfgzmxEHpR6y87z+pQKmxclZkw/5HyxAMmZv+ODZFk8ug+5V8qOmA==
-
-"@superviz/sdk@2.13.0":
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.13.0.tgz#fcd45d51debf12def3b046fb92701cf22ed0e692"
-  integrity sha512-ebFMuvycea0jh5HUhV/WHYCJZTxlVGnVG/gdIMua3RCqZIiJwNfDnqEhnhPfwegw9gUF6fatafZSm23QV8Cy4g==
+"@superviz/sdk@2.18.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.18.0.tgz#0220b7766ac47fb9ad44c9718ed28a03d2c695a4"
+  integrity sha512-icZixfBfpeteqhiV3CUbvHjYuiegkWhMprAExu5IxHBkv53/ALZAbvK36uGr7/LCwEIyMu2GMCVwTzDG/dtzKw==
   dependencies:
     "@superviz/immersive-core" "^0.3.1"
     "@types/jest" "^28.1.3"
@@ -571,6 +566,13 @@
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@superviz/sv-icons/-/sv-icons-0.6.0.tgz#5ef722b2c88db3d39042a37b4cbdd94a64940acc"
   integrity sha512-1G78XUV70z7caKRtOZqEcFJrifLAI9F1YXfBRu5T+2/Nj1tjMowP+2GUUr1bWGtXSpgj1ek4FtycfuEBPQCr7w==
+
+"@superviz/threejs-adapter@0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@superviz/threejs-adapter/-/threejs-adapter-0.0.3.tgz#e72c2441a974a245148fcd1d2375c28cddde57ef"
+  integrity sha512-AlGmAEEl11sdgHpf2tAb0gNl2CDX/jF4YE2Zaz7trDHB8DilSAuX1jaeNjv8X79tBU1jk/vuQkKII8wYNZYsnw==
+  dependencies:
+    three "^0.147.0"
 
 "@szmarczak/http-timer@^4.0.5":
   version "4.0.6"
