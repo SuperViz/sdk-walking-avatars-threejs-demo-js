@@ -60,8 +60,8 @@
 
 <script>
 import Model from './components/Model.vue';
-import { ThreeAdapter } from '../../threejs-adapter/src';
-// import { ThreeAdapter } from '@superviz/threejs-adapter';
+// import { ThreeAdapter } from '../../threejs-adapter/src';
+import { ThreeAdapter } from '@superviz/threejs-adapter';
 
 import SuperViz, {
   MeetingEvent,
