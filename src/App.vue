@@ -55,6 +55,7 @@
       <Model
         modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
         @loaded="onModelLoaded"
+        :player="player"
       ></Model>
     </section>
   </main>
@@ -62,8 +63,10 @@
 
 <script>
 import Model from './components/Model.vue';
-// import { ThreeAdapter } from '../../threejs-adapter/src';
-import { ThreeAdapter } from '@superviz/threejs-adapter';
+import { ThreeAdapter } from '../../threejs-adapter/src';
+// import { ThreeAdapter } from '@superviz/threejs-adapter';
+import * as THREE from 'three';
+import IfcManager from './IFC/IfcManager';
 
 import SuperViz, {
   MeetingEvent,
@@ -105,17 +108,20 @@ export default {
     camera: null,
     scene: null,
     threeAdapter: null,
-    renderLocalAvatar: true
+    renderLocalAvatar: true,
+    player: null,
+    manager: null
   }),
+  beforeMount () {
+    this.player = new THREE.Object3D();
+  },
   mounted() {
+    console.log('p', this.player)
     const url = new URL(window.location.href);
     this.userId = url.searchParams.get('userId') || '';
     this.roomId = url.searchParams.get('roomId') || '';
     this.userName = url.searchParams.get('userName') || '';
 
-    // animations of model
-    document.addEventListener('keydown', this.onKeyDown);
-    document.addEventListener('keyup', this.onKeyUp);
   },
   watch: {
     isAudience(value) {
@@ -208,27 +214,38 @@ export default {
         console.error('no scene yet');
         return;
       }
-      const player = this.camera;
-      this.threeAdapter = new ThreeAdapter(this.scene, this.camera, player);
+      this.threeAdapter = new ThreeAdapter(this.scene, this.camera, this.player);
 
       this.sdk.connectAdapter(this.threeAdapter, {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
-          renderLocalAvatar: this.renderLocalAvatar,
-          localAvatarPivotPoint: { x: 0, y: -2, z: 4 },
+          renderLocalAvatar: this.renderLocalAvatar
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
         isPointersEnabled: this.isPointersEnabled,
       });
 
       window.dispatchEvent(new Event('resize'));
+
+      //animations interval
+      window.setInterval(() => {
+        if (this.manager && this.manager.scene.currentControls === 'orbit') {
+          return;
+        }
+        Object.values(this.threeAdapter?.avatars)?.forEach((avatar) => {
+          if (avatar && avatar.isMoving) {
+            avatar.playAnimation('Take 001')
+          } else {
+            avatar.stopAnimation('Take 001')
+          }
+        })
+      }, 30)
     },
-    onModelLoaded({ camera, scene }) {
-      console.log('on model loaded!', camera);
-      console.log('scene', scene);
-      this.camera = camera;
-      this.scene = scene;
+    onModelLoaded({ manager }) {
+      this.camera = manager.scene.camera;
+      this.scene = manager.scene.scene;
+      this.manager = manager;
     },
     onLeftMeeting() {
       this.destroy();
@@ -236,52 +253,6 @@ export default {
     onJoinedMeeting() {
       this.initialize3D();
     },
-    onKeyDown (event) {
-      switch (event.code) {
-        case 'KeyW':
-        case 'ArrowUp':
-        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.playAnimation("Take 001")
-          break;
-
-        case 'KeyA':
-        case 'ArrowLeft':
-        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.playAnimation("Take 001")
-          break;
-
-        case 'KeyS':
-        case 'ArrowDown':
-        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.playAnimation("Take 001")
-          break;
-
-        case 'KeyD':
-        case 'ArrowRight':
-        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.playAnimation("Take 001")
-          break;
-      }
-    },
-    onKeyUp (event) {
-      switch (event.code) {
-        case 'KeyW':
-        case 'ArrowUp':
-        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.stopAnimation("Take 001")
-          break;
-
-        case 'KeyA':
-        case 'ArrowLeft':
-        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.stopAnimation("Take 001")
-          break;
-
-        case 'KeyS':
-        case 'ArrowDown':
-        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.stopAnimation("Take 001")
-          break;
-
-        case 'KeyD':
-        case 'ArrowRight':
-        if (this.threeAdapter.myAvatar) this.threeAdapter.myAvatar.stopAnimation("Take 001")
-          break;
-      }
-    }
   },
   computed: {
     connectionStatusBubble() {

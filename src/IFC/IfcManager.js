@@ -4,9 +4,10 @@ import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from 'three-
 import { Raycaster, Vector2 } from "three";
 
 export default class IfcManager {
-    constructor(canvasId) {
+    constructor(canvasId, player) {
         let self = this;
-        self.scene = new IfcScene(canvasId);
+        self.player = player;
+        self.scene = new IfcScene(canvasId, player);
         self.ifcModels = [];
         self.ifcLoader = new IFCLoader();
         self.setupIfcLoader();

@@ -6,10 +6,12 @@ import {
   AmbientLight,
   Color,
   DirectionalLight,
+  Spherical,
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
   GridHelper,
+  Group
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { PointerLockControlsCannon } from './PointerLockControlsCannon.js';
@@ -18,7 +20,9 @@ import { threeToCannon, ShapeType } from 'three-to-cannon';
 import { SHAPE_TYPES } from 'cannon-es';
 
 export class IfcScene {
-  constructor(id) {
+  constructor(id, player) {
+    this.player = player;
+    console.log('player', player)
     this.clock = new Clock();
     const self = this;
     this.ifcModel = null;
@@ -27,6 +31,7 @@ export class IfcScene {
     this.calculateWidthHeight(this);
     this.scene = new Scene();
     this.camera = new PerspectiveCamera(60, this.width / this.height, 0.1, 1000);
+    this.cameraOrigin = new Vector3(0, 1.5, 0);
     this.renderer = new WebGLRenderer({
       antialias: true,
       canvas: this.threeCanvas,
@@ -36,7 +41,7 @@ export class IfcScene {
     this.grid = new GridHelper();
     this.scene.background = new Color(0x6c757d);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.camera.position.z = 5;
+    // this.camera.position.z = 5;
     this.setupLights();
     this.setupWindowResize();
 
@@ -51,38 +56,134 @@ export class IfcScene {
       restitution: 0.3,
     });
     // Create the user collision sphere
-    const radius = 1.3;
+    /*
+    const radius = 1.0;
     const sphereShape = new CANNON.Sphere(radius);
-    this.cameraBody = new CANNON.Body({ mass: 5, material: physicsMaterial });
+    this.cameraBody = new CANNON.Body({ mass: 100, material: physicsMaterial });
     this.cameraBody.addShape(sphereShape);
     this.cameraBody.position.set(
       this.camera.position.x,
       this.camera.position.y,
       this.camera.position.z,
     );
-    this.cameraBody.linearDamping = 0.9;
-    this.world.addBody(this.cameraBody);
+    this.cameraBody.linearDamping = 0.99999;
+    this.cameraBody.angularDamping = 0.99999;
 
-    this.firstPersonControls = new PointerLockControlsCannon(this.camera, this.cameraBody);
+    this.world.addBody(this.cameraBody);
+    */
 
     this.setupAnimation(self);
     this.setupCamera();
     this.scene.add(this.grid);
-    this.scene.add(this.firstPersonControls.getObject());
+
+    this.firstPersonContainer = new Group();
+    this.scene.add(this.firstPersonContainer)
+    this.firstPersonContainer.add(this.player)
 
     this.currentControls = 'orbit';
+    this.camera.add(this.player)
+    this.player.position.set( 0, -2, -5)
+    this.player.rotation.set(0,Math.PI,0)
+
+
+    this.xAxis = new Vector3(1, 0, 0);
+    this.tempCameraVector = new Vector3();
+    this.tempModelVector = new Vector3();
+
+    
+
+
+    document.addEventListener( 'mousewheel', (event) => {
+      if (this.currentControls === 'first') {
+        const dir = new Vector3(0,0,0)
+        this.camera.getWorldDirection(dir)
+        this.camera.position.add(dir.multiplyScalar(-event.deltaY/500));
+      }
+    });
+
+        // Key and mouse events
+    window.addEventListener("keydown", (e) => {
+      const { keyCode } = e;
+      if(keyCode === 87 || keyCode === 38) {
+        this.movingForward = true;
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      const { keyCode } = e;
+      if(keyCode === 87 || keyCode === 38) {
+        this.movingForward = false;
+      }
+    });
+    window.addEventListener("pointerdown", (e) => {
+      this.mousedown = true;
+    });
+    
+    window.addEventListener("pointerup", (e) => {
+      this.mousedown = false;
+    });
+    
+    window.addEventListener("pointermove", (e) => {
+      if(this.mousedown) {
+        const { movementX, movementY } = e;
+        const offset = new Spherical().setFromVector3(
+          this.camera.position.clone().sub(this.cameraOrigin)
+        );
+        const phi = offset.phi - movementY * 0.02;
+        offset.theta -= movementX * 0.02;
+        offset.phi = Math.max(0.01, Math.min(0.35 * Math.PI, phi));
+        this.camera.position.copy(
+          this.cameraOrigin.clone().add(new Vector3().setFromSpherical(offset))
+        );
+        this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+      }
+    })
   }
 
   setupAnimation(self) {
     const delta = self.clock.getDelta();
     if (this.currentControls === 'orbit') {
       self.orbitControls.update();
-    } else {
-      self.firstPersonControls.update(delta);
     }
     self.world.step(delta);
 
     self.renderer.render(self.scene, self.camera);
+
+    if(this.movingForward) {
+      // Get the X-Z plane in which camera is looking to move the player
+      this.camera.getWorldDirection(this.tempCameraVector);
+      const cameraDirection = this.tempCameraVector.setY(0).normalize();
+      
+      // Get the X-Z plane in which player is looking to compare with camera
+      this.player.getWorldDirection(this.tempModelVector);
+      const playerDirection = this.tempModelVector.setY(0).normalize();
+  
+      // Get the angle to x-axis. z component is used to compare if the angle is clockwise or anticlockwise since angleTo returns a positive value
+      const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
+      const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
+      
+      // Get the angle to rotate the player to face the camera. Clockwise positive
+      const angleToRotate = playerAngle - cameraAngle;
+      
+      // Get the shortest angle from clockwise angle to ensure the player always rotates the shortest angle
+      let sanitisedAngle = angleToRotate;
+      if(angleToRotate > Math.PI) {
+        sanitisedAngle = angleToRotate - 2 * Math.PI
+      }
+      if(angleToRotate < -Math.PI) {
+        sanitisedAngle = angleToRotate + 2 * Math.PI
+      }
+      
+      // Rotate the model by a tiny value towards the camera direction
+      this.player.rotateY(
+        Math.max(-0.05, Math.min(sanitisedAngle, 0.05))
+      );
+      this.firstPersonContainer.position.add(cameraDirection.multiplyScalar(0.03));
+      this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+    }
+
+
+
     requestAnimationFrame(function () {
       self.setupAnimation(self);
     });
@@ -122,7 +223,7 @@ export class IfcScene {
   setupCamera() {
     this.camera.position.set(10, 10, 10);
     this.orbitControls.target.set(0, 0, 0);
-    this.orbitControls.enableDamping = true;
+    this.orbitControls.enableDamping = false;
   }
 
   add(obj) {
@@ -171,28 +272,34 @@ export class IfcScene {
   }
 
   changeControls() {
+    console.log('change controls')
     this.calculateWidthHeight();
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
     if (this.currentControls === 'orbit') {
-      this.cameraBody.position.set(
-        this.camera.position.x,
-        this.camera.position.y,
-        this.camera.position.z,
-      );
+      this.currentControls = 'first'
+      console.log('set first')
+      this.firstPersonContainer.position.set(this.camera.position.x, 0, this.camera.position.z )
       this.orbitControls.enabled = false;
-      this.firstPersonControls.enabled = true;
-      this.firstPersonControls.lock();
-      this.currentControls = 'firstperson';
+      this.player.position.set( 0, 0, 0)
+      this.camera.remove(this.player)
+      this.firstPersonContainer.add(this.camera);
+      this.firstPersonContainer.add(this.player)
+      this.camera.position.set( 0, 1.6, -3.5 );
+      this.camera.lookAt(this.cameraOrigin);
+
     } else {
-      this.firstPersonControls.unlock();
-      this.currentControls = 'orbit';
+      console.log('set orbit')
+      this.firstPersonContainer.remove(this.camera);
+      this.firstPersonContainer.remove(this.player)
+      this.currentControls = 'orbit'
       this.orbitControls.enabled = true;
-      this.fitModelToFrame(this.ifcModel);
-      this.orbitControls.reset();
-      this.firstPersonControls.enabled = false;
+      this.camera.position.set( 0, 0, 0 );
+      this.player.position.set( 0, -0.1, -5)
+      this.player.rotation.set(0,Math.PI,0)
+      this.camera.add(this.player)
     }
   }
 }

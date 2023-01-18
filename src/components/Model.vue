@@ -14,7 +14,7 @@ import { Raycaster, Vector2 } from 'three';
 
 export default {
   name: 'Model',
-  props: ['modelUrl', 'token', 'projectId', 'discipline'],
+  props: ['modelUrl', 'token', 'projectId', 'discipline', 'player'],
   data() {
     return {
       entityData: '',
@@ -26,8 +26,7 @@ export default {
       this.addPicking();
       this.setupPick(this);
       this.$emit('loaded', {
-        camera: this.IFCManager.scene.camera,
-        scene: this.IFCManager.scene.scene,
+        manager: this.IFCManager
       });
     },
     addPicking: function () {
@@ -63,7 +62,7 @@ export default {
   },
   async mounted() {
     const self = this;
-    this.IFCManager = new IfcManager('model');
+    this.IFCManager = new IfcManager('model', this.player);
     self.IFCManager.scene.ifcModel = await self.IFCManager.ifcLoader.loadAsync(this.modelUrl);
     self.IFCManager.scene.add(self.IFCManager.scene.ifcModel.mesh);
     self.onLoaded();
