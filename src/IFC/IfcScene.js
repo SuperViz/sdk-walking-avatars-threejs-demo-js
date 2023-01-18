@@ -14,7 +14,6 @@ import {
   Group
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { PointerLockControlsCannon } from './PointerLockControlsCannon.js';
 import * as CANNON from 'cannon-es';
 import { threeToCannon, ShapeType } from 'three-to-cannon';
 import { SHAPE_TYPES } from 'cannon-es';
