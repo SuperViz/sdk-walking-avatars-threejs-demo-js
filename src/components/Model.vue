@@ -66,13 +66,6 @@ export default {
     self.IFCManager.scene.ifcModel = await self.IFCManager.ifcLoader.loadAsync(this.modelUrl);
     self.IFCManager.scene.add(self.IFCManager.scene.ifcModel.mesh);
     self.onLoaded();
-    document.addEventListener('keyup', (event) => {
-      console.log('key up');
-      if (event.code === 'Space') {
-        console.log('space up');
-        self.IFCManager.scene.changeControls();
-      }
-    });
   },
   watch: {
     async modelUrl(modelUrl) {

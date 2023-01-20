@@ -53,7 +53,7 @@
         <tree-view :data="userList"></tree-view>
       </aside>
       <Model
-        modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
+        modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/rst_advanced_sample_project.ifc"
         @loaded="onModelLoaded"
         :player="player"
       ></Model>
@@ -63,8 +63,8 @@
 
 <script>
 import Model from './components/Model.vue';
-// import { ThreeAdapter } from '../../threejs-adapter/src';
-import { ThreeAdapter } from '@superviz/threejs-adapter';
+import { ThreeAdapter } from '../../threejs-adapter/src';
+// import { ThreeAdapter } from '@superviz/threejs-adapter';
 import * as THREE from 'three';
 import IfcManager from './IFC/IfcManager';
 
@@ -73,8 +73,8 @@ import SuperViz, {
   DeviceEvent,
   MeetingState,
   MeetingConnectionStatus,
-} from '@superviz/sdk';
-// } from '../../sdk_/dist';
+} from '../../sdk_/dist';
+// } from '@superviz/sdk';
 import bubble from './components/bubble.vue';
 
 const DEVELOPER_KEY = import.meta.env.VITE_SUPERVIZ_DEVELOPER_TOKEN;
@@ -103,7 +103,7 @@ export default {
     avatarThumbnail: '',
     avatarScale: '0.2',
     avatarHeight: '0',
-    isPointersEnabled: true,
+    isPointersEnabled: false,
     isAvatarsEnabled: true,
     camera: null,
     scene: null,
@@ -215,16 +215,18 @@ export default {
         return;
       }
       this.threeAdapter = new ThreeAdapter(this.scene, this.camera, this.player);
-
+      console.log('conecta')
       this.sdk.connectAdapter(this.threeAdapter, {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
-          renderLocalAvatar: this.renderLocalAvatar
+          renderLocalAvatar: this.renderLocalAvatar,
+          showName: true
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
         isPointersEnabled: this.isPointersEnabled,
       });
+
 
       window.dispatchEvent(new Event('resize'));
 
@@ -240,7 +242,7 @@ export default {
             avatar.stopAnimation('Take 001')
           }
         })
-      }, 30)
+      }, 10)
     },
     onModelLoaded({ manager }) {
       this.camera = manager.scene.camera;
@@ -251,6 +253,7 @@ export default {
       this.destroy();
     },
     onJoinedMeeting() {
+      console.log('onJoinedMeeting')
       this.initialize3D();
     },
   },

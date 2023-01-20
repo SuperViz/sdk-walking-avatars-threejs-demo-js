@@ -72,18 +72,12 @@ export class IfcScene {
     */
 
     this.setupAnimation(self);
-    this.setupCamera();
     this.scene.add(this.grid);
 
     this.firstPersonContainer = new Group();
     this.scene.add(this.firstPersonContainer)
-    this.firstPersonContainer.add(this.player)
 
-    this.currentControls = 'orbit';
-    this.camera.add(this.player)
-    this.player.position.set( 0, -2, -5)
-    this.player.rotation.set(0,Math.PI,0)
-
+    this.setControls('first')
 
     this.xAxis = new Vector3(1, 0, 0);
     this.tempCameraVector = new Vector3();
@@ -103,15 +97,45 @@ export class IfcScene {
         // Key and mouse events
     window.addEventListener("keydown", (e) => {
       const { keyCode } = e;
-      if(keyCode === 87 || keyCode === 38) {
-        this.movingForward = true;
+
+      switch (e.code) {
+        case 'KeyW':
+        case 'ArrowUp':
+          this.movingForward = true;
+          break;
+        case 'KeyA':
+        case 'ArrowLeft':
+          this.movingLeft = true;
+          break;
+        case 'KeyS':
+        case 'ArrowDown':
+          this.movingBack = true;
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          this.movingRight = true;
+          break;
       }
     });
 
     window.addEventListener("keyup", (e) => {
-      const { keyCode } = e;
-      if(keyCode === 87 || keyCode === 38) {
-        this.movingForward = false;
+      switch (e.code) {
+        case 'KeyW':
+        case 'ArrowUp':
+          this.movingForward = false;
+          break;
+        case 'KeyA':
+        case 'ArrowLeft':
+          this.movingLeft = false;
+          break;
+        case 'KeyS':
+        case 'ArrowDown':
+          this.movingBack = false;
+          break;
+        case 'KeyD':
+        case 'ArrowRight':
+          this.movingRight = false;
+          break;
       }
     });
     window.addEventListener("pointerdown", (e) => {
@@ -181,7 +205,110 @@ export class IfcScene {
       this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
     }
 
+    if(this.movingRight) {
+      // Get the X-Z plane in which camera is looking to move the player
+      this.camera.getWorldDirection(this.tempCameraVector);
+      const cameraDirection = this.tempCameraVector.setY(0).normalize();
+      
+      // Get the X-Z plane in which player is looking to compare with camera
+      this.player.getWorldDirection(this.tempModelVector);
+      const playerDirection = this.tempModelVector.setY(0).normalize();
+  
+      // Get the angle to x-axis. z component is used to compare if the angle is clockwise or anticlockwise since angleTo returns a positive value
+      const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
+      const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
+      
+      // Get the angle to rotate the player to face the camera. Clockwise positive
+      let angleToRotate = playerAngle - cameraAngle;
+      angleToRotate -=Math.PI/2
+      // Get the shortest angle from clockwise angle to ensure the player always rotates the shortest angle
+      let sanitisedAngle = angleToRotate;
+      if(angleToRotate > Math.PI) {
+        sanitisedAngle = angleToRotate - 2 * Math.PI
+      }
+      if(angleToRotate < -Math.PI) {
+        sanitisedAngle = angleToRotate + 2 * Math.PI
+      }
+      
+      // Rotate the model by a tiny value towards the camera direction
+      this.player.rotateY(
+        Math.max(-0.05, Math.min(sanitisedAngle, 0.05))
+      );
 
+      let playerDirAdjusted = playerDirection
+      this.firstPersonContainer.position.add(playerDirAdjusted.multiplyScalar(0.03));
+      this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+    }
+
+    if(this.movingLeft) {
+      // Get the X-Z plane in which camera is looking to move the player
+      this.camera.getWorldDirection(this.tempCameraVector);
+      const cameraDirection = this.tempCameraVector.setY(0).normalize();
+      
+      // Get the X-Z plane in which player is looking to compare with camera
+      this.player.getWorldDirection(this.tempModelVector);
+      const playerDirection = this.tempModelVector.setY(0).normalize();
+  
+      // Get the angle to x-axis. z component is used to compare if the angle is clockwise or anticlockwise since angleTo returns a positive value
+      const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
+      const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
+      
+      // Get the angle to rotate the player to face the camera. Clockwise positive
+      let angleToRotate = playerAngle - cameraAngle;
+      angleToRotate +=Math.PI/2
+      // Get the shortest angle from clockwise angle to ensure the player always rotates the shortest angle
+      let sanitisedAngle = angleToRotate;
+      if(angleToRotate > Math.PI) {
+        sanitisedAngle = angleToRotate - 2 * Math.PI
+      }
+      if(angleToRotate < -Math.PI) {
+        sanitisedAngle = angleToRotate + 2 * Math.PI
+      }
+      
+      // Rotate the model by a tiny value towards the camera direction
+      this.player.rotateY(
+        Math.max(-0.05, Math.min(sanitisedAngle, 0.05))
+      );
+
+      let playerDirAdjusted = playerDirection
+      this.firstPersonContainer.position.add(playerDirAdjusted.multiplyScalar(0.03));
+      this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+    }
+
+    if(this.movingBack) {
+      // Get the X-Z plane in which camera is looking to move the player
+      this.camera.getWorldDirection(this.tempCameraVector);
+      const cameraDirection = this.tempCameraVector.setY(0).normalize();
+      
+      // Get the X-Z plane in which player is looking to compare with camera
+      this.player.getWorldDirection(this.tempModelVector);
+      const playerDirection = this.tempModelVector.setY(0).normalize();
+  
+      // Get the angle to x-axis. z component is used to compare if the angle is clockwise or anticlockwise since angleTo returns a positive value
+      const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
+      const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
+      
+      // Get the angle to rotate the player to face the camera. Clockwise positive
+      let angleToRotate = playerAngle - cameraAngle;
+      angleToRotate +=Math.PI
+      // Get the shortest angle from clockwise angle to ensure the player always rotates the shortest angle
+      let sanitisedAngle = angleToRotate;
+      if(angleToRotate > Math.PI) {
+        sanitisedAngle = angleToRotate - 2 * Math.PI
+      }
+      if(angleToRotate < -Math.PI) {
+        sanitisedAngle = angleToRotate + 2 * Math.PI
+      }
+      
+      // Rotate the model by a tiny value towards the camera direction
+      this.player.rotateY(
+        Math.max(-0.05, Math.min(sanitisedAngle, 0.05))
+      );
+
+      let playerDirAdjusted = playerDirection
+      this.firstPersonContainer.position.add(playerDirAdjusted.multiplyScalar(0.03));
+      this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+    }
 
     requestAnimationFrame(function () {
       self.setupAnimation(self);
@@ -217,12 +344,6 @@ export class IfcScene {
     window.addEventListener('mousedown', () => {
       // this.firstPersonControls.activeLook = true;
     });
-  }
-
-  setupCamera() {
-    this.camera.position.set(10, 10, 10);
-    this.orbitControls.target.set(0, 0, 0);
-    this.orbitControls.enableDamping = false;
   }
 
   add(obj) {
@@ -271,24 +392,30 @@ export class IfcScene {
   }
 
   changeControls() {
-    console.log('change controls')
+    if (this.currentControls === 'orbit') {
+      this.setControls('first')
+    } else {
+      this.setControls('orbit')
+    }
+  }
+
+  setControls(type) {
+    console.log('change controls to ', type)
     this.calculateWidthHeight();
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-
-    if (this.currentControls === 'orbit') {
+    if (type === 'first') {
       this.currentControls = 'first'
       console.log('set first')
+      this.camera.remove(this.player)
       this.firstPersonContainer.position.set(this.camera.position.x, 0, this.camera.position.z )
       this.orbitControls.enabled = false;
       this.player.position.set( 0, 0, 0)
-      this.camera.remove(this.player)
       this.firstPersonContainer.add(this.camera);
       this.firstPersonContainer.add(this.player)
-      this.camera.position.set( 0, 1.6, -3.5 );
+      this.camera.position.set( 0, 1.2, -3 );
       this.camera.lookAt(this.cameraOrigin);
-
     } else {
       console.log('set orbit')
       this.firstPersonContainer.remove(this.camera);
@@ -296,6 +423,8 @@ export class IfcScene {
       this.currentControls = 'orbit'
       this.orbitControls.enabled = true;
       this.camera.position.set( 0, 0, 0 );
+      this.orbitControls.target.set(0, 0, 0);
+      this.orbitControls.enableDamping = false;
       this.player.position.set( 0, -0.1, -5)
       this.player.rotation.set(0,Math.PI,0)
       this.camera.add(this.player)
