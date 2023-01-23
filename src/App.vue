@@ -63,8 +63,8 @@
 
 <script>
 import Model from './components/Model.vue';
-// import { ThreeAdapter } from '../../threejs-adapter/src';
-import { ThreeAdapter } from '@superviz/threejs-adapter';
+import { ThreeAdapter } from '../../threejs-adapter/src';
+// import { ThreeAdapter } from '@superviz/threejs-adapter';
 import * as THREE from 'three';
 import IfcManager from './IFC/IfcManager';
 
@@ -73,9 +73,9 @@ import SuperViz, {
   DeviceEvent,
   MeetingState,
   MeetingConnectionStatus,
-} from '@superviz/sdk';
+} from '../../sdk_/dist';
+// // } from '@superviz/sdk';
 
-// } from '../../sdk_/dist';
 import bubble from './components/bubble.vue';
 
 const DEVELOPER_KEY = import.meta.env.VITE_SUPERVIZ_DEVELOPER_TOKEN;
@@ -108,7 +108,7 @@ export default {
     isAvatarsEnabled: true,
     camera: null,
     scene: null,
-    threeAdapter: null,
+    threejsAdapterInstance: null,
     renderLocalAvatar: true,
     player: null,
     manager: null
@@ -117,7 +117,6 @@ export default {
     this.player = new THREE.Object3D();
   },
   mounted() {
-    console.log('p', this.player)
     const url = new URL(window.location.href);
     this.userId = url.searchParams.get('userId') || '';
     this.roomId = url.searchParams.get('roomId') || '';
@@ -208,16 +207,14 @@ export default {
       }
     },
     async initialize3D() {
-      if (this.threeAdapter) {
+      if (this.threejsAdapterInstance) {
         this.sdk.disconnectAdapter();
       }
       if (!this.scene) {
         console.error('no scene yet');
         return;
       }
-      this.threeAdapter = new ThreeAdapter(this.scene, this.camera, this.player);
-      console.log('conecta')
-      this.sdk.connectAdapter(this.threeAdapter, {
+      this.threejsAdapterInstance = this.sdk.connectAdapter(new ThreeAdapter(this.scene, this.camera, this.player), {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
@@ -236,7 +233,8 @@ export default {
         if (this.manager && this.manager.scene.currentControls === 'orbit') {
           return;
         }
-        Object.values(this.threeAdapter?.avatars)?.forEach((avatar) => {
+        const avatars = this.threejsAdapterInstance?.getAvatars()
+        Object.values(avatars)?.forEach((avatar) => {
           if (avatar && avatar.isMoving) {
             avatar.playAnimation('Take 001')
           } else {
