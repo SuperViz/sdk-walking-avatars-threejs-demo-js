@@ -22,7 +22,6 @@ export default {
   },
   methods: {
     onLoaded: function () {
-      console.log('this.IFCManager', this.IFCManager);
       this.addPicking();
       this.setupPick(this);
       this.$emit('loaded', {

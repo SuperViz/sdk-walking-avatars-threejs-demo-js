@@ -7,17 +7,14 @@ import {
   Color,
   DirectionalLight,
   Spherical,
+  Quaternion,
   PerspectiveCamera,
   Scene,
   WebGLRenderer,
   GridHelper,
-  Group
+  Group,
+  Object3D
 } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import * as CANNON from 'cannon-es';
-import { threeToCannon, ShapeType } from 'three-to-cannon';
-import { SHAPE_TYPES } from 'cannon-es';
-
 export class IfcScene {
   constructor(id, player) {
     this.player = player;
@@ -29,7 +26,6 @@ export class IfcScene {
     this.calculateWidthHeight(this);
     this.scene = new Scene();
     this.camera = new PerspectiveCamera(60, this.width / this.height, 0.1, 1000);
-    this.cameraOrigin = new Vector3(0, 1.5, 0);
     this.renderer = new WebGLRenderer({
       antialias: false,
       canvas: this.threeCanvas,
@@ -39,64 +35,43 @@ export class IfcScene {
     this.grid = new GridHelper();
     this.scene.background = new Color('white');
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    // this.camera.position.z = 5;
     this.setupLights();
     this.setupWindowResize();
-
-    this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
-
-    // physics
-    this.world = new CANNON.World();
-    this.world.gravity.set(0, -20, 0);
-    const physicsMaterial = new CANNON.Material('physics');
-    const physics_physics = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, {
-      friction: 0.0,
-      restitution: 0.3,
-    });
-    // Create the user collision sphere
-    /*
-    const radius = 1.0;
-    const sphereShape = new CANNON.Sphere(radius);
-    this.cameraBody = new CANNON.Body({ mass: 100, material: physicsMaterial });
-    this.cameraBody.addShape(sphereShape);
-    this.cameraBody.position.set(
-      this.camera.position.x,
-      this.camera.position.y,
-      this.camera.position.z,
-    );
-    this.cameraBody.linearDamping = 0.99999;
-    this.cameraBody.angularDamping = 0.99999;
-
-    this.world.addBody(this.cameraBody);
-    */
-
-    this.setupAnimation(self);
-    this.scene.add(this.grid);
-
-    this.firstPersonContainer = new Group();
-    this.scene.add(this.firstPersonContainer)
-
-    this.setControls('first')
+    this.keyDown = false
 
     this.xAxis = new Vector3(1, 0, 0);
     this.tempCameraVector = new Vector3();
     this.tempModelVector = new Vector3();
 
-    
+
+    this.scene.add(this.grid);
+    this.scene.add(this.player);
+
+    this.followCamPivot = new Object3D()
+    this.followCamPivot.rotation.order = 'YXZ'
+    this.followCam = new Object3D()
+    this.tempCamToPos = new Vector3(0,0,0)
+    this.followCam.position.z = 3
+    this.followCam.position.y = 1
 
 
-    document.addEventListener( 'mousewheel', (event) => {
-      if (this.currentControls === 'first') {
-        const dir = new Vector3(0,0,0)
-        this.camera.getWorldDirection(dir)
-        this.camera.position.add(dir.multiplyScalar(-event.deltaY/500));
+    this.followCamPivot.add(this.followCam)
+
+    this.scene.add(this.followCamPivot)
+
+    this.animate(self);
+
+    document.addEventListener( 'mousewheel', (e) => {
+      let newVal = this.followCam.position.z + e.deltaY * 0.05
+      if (newVal > 0.25 && newVal < 10) {
+          this.followCam.position.z = newVal
       }
+      return false
     });
 
-        // Key and mouse events
+    // Key and mouse events
     window.addEventListener("keydown", (e) => {
-      const { keyCode } = e;
-
+      this.keyDown = true
       switch (e.code) {
         case 'KeyW':
         case 'ArrowUp':
@@ -118,6 +93,7 @@ export class IfcScene {
     });
 
     window.addEventListener("keyup", (e) => {
+      this.keyDown = false
       switch (e.code) {
         case 'KeyW':
         case 'ArrowUp':
@@ -148,170 +124,81 @@ export class IfcScene {
     window.addEventListener("pointermove", (e) => {
       if(this.mousedown) {
         const { movementX, movementY } = e;
-        const offset = new Spherical().setFromVector3(
-          this.camera.position.clone().sub(this.cameraOrigin)
-        );
-        const phi = offset.phi - movementY * 0.02;
-        offset.theta -= movementX * 0.02;
-        offset.phi = Math.max(0.01, Math.min(0.35 * Math.PI, phi));
-        this.camera.position.copy(
-          this.cameraOrigin.clone().add(new Vector3().setFromSpherical(offset))
-        );
-        this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+
+        this.followCamPivot.rotation.y -= movementX * 0.002;
+        this.followCamPivot.rotation.x -= movementY * 0.002;
+        return false;
       }
     })
   }
 
-  setupAnimation(self) {
+  animate(self) {
     const delta = self.clock.getDelta();
-    if (this.currentControls === 'orbit') {
-      self.orbitControls.update();
-    }
-    // self.world.step(delta);
-
     self.renderer.render(self.scene, self.camera);
+    self.checkMoving();
+    this.followCamPivot.position.copy(this.player.position)
+
+    this.followCam.getWorldPosition(this.tempCamToPos);
+    this.camera.position.lerpVectors(this.camera.position, this.tempCamToPos, 0.1);
+
+    this.camera.quaternion.copy(this.followCamPivot.quaternion);
+    requestAnimationFrame(function () {
+      self.animate(self);
+    });
+  }
+
+  checkMoving () {
+    let direction
+
+    this.camera.getWorldDirection(this.tempCameraVector);
+    const cameraDirection = this.tempCameraVector.setY(0).normalize();
+    
+    this.player.getWorldDirection(this.tempModelVector);
+    const playerDirection = this.tempModelVector.setY(0).normalize();
+
+    const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
+    const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
+
+    let moving = false;
+    let angleToRotate = playerAngle - cameraAngle;
 
     if(this.movingForward) {
-      // Get the X-Z plane in which camera is looking to move the player
-      this.camera.getWorldDirection(this.tempCameraVector);
-      const cameraDirection = this.tempCameraVector.setY(0).normalize();
-      
-      // Get the X-Z plane in which player is looking to compare with camera
-      this.player.getWorldDirection(this.tempModelVector);
-      const playerDirection = this.tempModelVector.setY(0).normalize();
-  
-      // Get the angle to x-axis. z component is used to compare if the angle is clockwise or anticlockwise since angleTo returns a positive value
-      const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
-      const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
-      
-      // Get the angle to rotate the player to face the camera. Clockwise positive
-      const angleToRotate = playerAngle - cameraAngle;
-      
-      // Get the shortest angle from clockwise angle to ensure the player always rotates the shortest angle
-      let sanitisedAngle = angleToRotate;
-      if(angleToRotate > Math.PI) {
-        sanitisedAngle = angleToRotate - 2 * Math.PI
-      }
-      if(angleToRotate < -Math.PI) {
-        sanitisedAngle = angleToRotate + 2 * Math.PI
-      }
-      
-      // Rotate the model by a tiny value towards the camera direction
-      this.player.rotateY(
-        Math.max(-0.05, Math.min(sanitisedAngle, 0.05))
-      );
-      this.firstPersonContainer.position.add(cameraDirection.multiplyScalar(0.03));
-      this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+      moving = true
+      direction = angleToRotate;
     }
 
     if(this.movingRight) {
-      // Get the X-Z plane in which camera is looking to move the player
-      this.camera.getWorldDirection(this.tempCameraVector);
-      const cameraDirection = this.tempCameraVector.setY(0).normalize();
-      
-      // Get the X-Z plane in which player is looking to compare with camera
-      this.player.getWorldDirection(this.tempModelVector);
-      const playerDirection = this.tempModelVector.setY(0).normalize();
-  
-      // Get the angle to x-axis. z component is used to compare if the angle is clockwise or anticlockwise since angleTo returns a positive value
-      const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
-      const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
-      
-      // Get the angle to rotate the player to face the camera. Clockwise positive
-      let angleToRotate = playerAngle - cameraAngle;
+      moving = true
       angleToRotate -=Math.PI/2
-      // Get the shortest angle from clockwise angle to ensure the player always rotates the shortest angle
-      let sanitisedAngle = angleToRotate;
-      if(angleToRotate > Math.PI) {
-        sanitisedAngle = angleToRotate - 2 * Math.PI
-      }
-      if(angleToRotate < -Math.PI) {
-        sanitisedAngle = angleToRotate + 2 * Math.PI
-      }
-      
-      // Rotate the model by a tiny value towards the camera direction
-      this.player.rotateY(
-        Math.max(-0.05, Math.min(sanitisedAngle, 0.05))
-      );
-
-      let playerDirAdjusted = playerDirection
-      this.firstPersonContainer.position.add(playerDirAdjusted.multiplyScalar(0.03));
-      this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+      direction = angleToRotate;
     }
 
     if(this.movingLeft) {
-      // Get the X-Z plane in which camera is looking to move the player
-      this.camera.getWorldDirection(this.tempCameraVector);
-      const cameraDirection = this.tempCameraVector.setY(0).normalize();
-      
-      // Get the X-Z plane in which player is looking to compare with camera
-      this.player.getWorldDirection(this.tempModelVector);
-      const playerDirection = this.tempModelVector.setY(0).normalize();
-  
-      // Get the angle to x-axis. z component is used to compare if the angle is clockwise or anticlockwise since angleTo returns a positive value
-      const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
-      const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
-      
-      // Get the angle to rotate the player to face the camera. Clockwise positive
-      let angleToRotate = playerAngle - cameraAngle;
+      moving = true
       angleToRotate +=Math.PI/2
-      // Get the shortest angle from clockwise angle to ensure the player always rotates the shortest angle
-      let sanitisedAngle = angleToRotate;
-      if(angleToRotate > Math.PI) {
-        sanitisedAngle = angleToRotate - 2 * Math.PI
-      }
-      if(angleToRotate < -Math.PI) {
-        sanitisedAngle = angleToRotate + 2 * Math.PI
-      }
-      
-      // Rotate the model by a tiny value towards the camera direction
-      this.player.rotateY(
-        Math.max(-0.05, Math.min(sanitisedAngle, 0.05))
-      );
-
-      let playerDirAdjusted = playerDirection
-      this.firstPersonContainer.position.add(playerDirAdjusted.multiplyScalar(0.03));
-      this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+      direction = angleToRotate;
     }
 
     if(this.movingBack) {
-      // Get the X-Z plane in which camera is looking to move the player
-      this.camera.getWorldDirection(this.tempCameraVector);
-      const cameraDirection = this.tempCameraVector.setY(0).normalize();
-      
-      // Get the X-Z plane in which player is looking to compare with camera
-      this.player.getWorldDirection(this.tempModelVector);
-      const playerDirection = this.tempModelVector.setY(0).normalize();
-  
-      // Get the angle to x-axis. z component is used to compare if the angle is clockwise or anticlockwise since angleTo returns a positive value
-      const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
-      const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
-      
-      // Get the angle to rotate the player to face the camera. Clockwise positive
-      let angleToRotate = playerAngle - cameraAngle;
+      moving = true
       angleToRotate +=Math.PI
-      // Get the shortest angle from clockwise angle to ensure the player always rotates the shortest angle
-      let sanitisedAngle = angleToRotate;
+      direction = angleToRotate;
+    }
+    if (moving) {
       if(angleToRotate > Math.PI) {
-        sanitisedAngle = angleToRotate - 2 * Math.PI
+        direction = angleToRotate - 2 * Math.PI
       }
       if(angleToRotate < -Math.PI) {
-        sanitisedAngle = angleToRotate + 2 * Math.PI
+        direction = angleToRotate + 2 * Math.PI
       }
-      
-      // Rotate the model by a tiny value towards the camera direction
       this.player.rotateY(
-        Math.max(-0.05, Math.min(sanitisedAngle, 0.05))
+        Math.max(-0.05, Math.min(direction, 0.05))
       );
 
       let playerDirAdjusted = playerDirection
-      this.firstPersonContainer.position.add(playerDirAdjusted.multiplyScalar(0.03));
-      this.camera.lookAt(this.firstPersonContainer.position.clone().add(this.cameraOrigin));
+      const speed = 0.015
+      this.player.position.add(playerDirAdjusted.multiplyScalar(speed));
     }
-
-    requestAnimationFrame(function () {
-      self.setupAnimation(self);
-    });
   }
 
   calculateWidthHeight() {
@@ -337,39 +224,11 @@ export class IfcScene {
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(window.innerWidth, window.innerHeight);
     });
-    window.addEventListener('mouseup', () => {
-      // this.firstPersonControls.activeLook = false;
-    });
-    window.addEventListener('mousedown', () => {
-      // this.firstPersonControls.activeLook = true;
-    });
   }
 
   add(obj) {
     this.ifcModel = this.scene.add(obj);
     this.ifcModels.push(this.ifcModel);
-    /*
-    const result = threeToCannon(obj, {type: ShapeType.MESH});
-    const {shape, offset, quaternion} = result;
-
-    const rigidBody = new CANNON.Body({
-      mass: 0,
-      shape: shape,
-    });
-
-    // Add the shape to a CANNON.Body.
-    this.world.addBody(rigidBody);
-    */
-
-    /*
-  const planeShape = new CANNON.Plane()
-  
-  const planeBody = new CANNON.Body({ mass: 0 })
-  planeBody.addShape(planeShape);
-  planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
-  this.world.addBody(planeBody)
-  */
-
   }
 
   fitModelToFrame(model) {
@@ -380,7 +239,6 @@ export class IfcScene {
       .normalize();
     this.camera.position.copy(direction.multiplyScalar(distance).add(boxCenter));
     this.camera.updateProjectionMatrix();
-    this.orbitControls.target.set(boxCenter.x, boxCenter.y, boxCenter.z);
   }
 
   getBoxCenterAndDistance(model) {
@@ -391,42 +249,5 @@ export class IfcScene {
     const halfFovY = MathUtils.degToRad(this.camera.fov * 0.5);
     const distance = halfSizeToFitOnScreen / Math.tan(halfFovY);
     return { boxCenter, distance };
-  }
-
-  changeControls() {
-    if (this.currentControls === 'orbit') {
-      this.setControls('first')
-    } else {
-      this.setControls('orbit')
-    }
-  }
-
-  setControls(type) {
-    this.calculateWidthHeight();
-    this.camera.aspect = this.width / this.height;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    if (type === 'first') {
-      this.currentControls = 'first'
-      this.camera.remove(this.player)
-      this.firstPersonContainer.position.set(this.camera.position.x, 0, this.camera.position.z )
-      this.orbitControls.enabled = false;
-      this.player.position.set( 0, 0, 0)
-      this.firstPersonContainer.add(this.camera);
-      this.firstPersonContainer.add(this.player)
-      this.camera.position.set( 0, 1.2, -3 );
-      this.camera.lookAt(this.cameraOrigin);
-    } else {
-      this.firstPersonContainer.remove(this.camera);
-      this.firstPersonContainer.remove(this.player)
-      this.currentControls = 'orbit'
-      this.orbitControls.enabled = true;
-      this.camera.position.set( 0, 0, 0 );
-      this.orbitControls.target.set(0, 0, 0);
-      this.orbitControls.enableDamping = false;
-      this.player.position.set( 0, -0.1, -5)
-      this.player.rotation.set(0,Math.PI,0)
-      this.camera.add(this.player)
-    }
   }
 }

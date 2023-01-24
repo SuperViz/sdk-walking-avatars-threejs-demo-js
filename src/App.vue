@@ -65,7 +65,7 @@
 <script>
 import Model from './components/Model.vue';
 import { ThreeAdapter } from '../../threejs-adapter/src';
-// import { ThreeAdapter } from '@superviz/threejs-adapter';
+import { ThreeAdapter } from '@superviz/threejs-adapter';
 import * as THREE from 'three';
 import IfcManager from './IFC/IfcManager';
 
@@ -74,8 +74,8 @@ import SuperViz, {
   DeviceEvent,
   MeetingState,
   MeetingConnectionStatus,
-} from '../../sdk_/dist';
-// // } from '@superviz/sdk';
+} from '@superviz/sdk';
+// } from '../../sdk_/dist';
 
 import bubble from './components/bubble.vue';
 
@@ -101,10 +101,10 @@ export default {
     meetingState: MeetingState.FRAME_UNINITIALIZED,
     connectionState: MeetingConnectionStatus.NOT_AVAILABLE,
     avatarUrl:
-      'https://superviz2homologmediaserver.s3.amazonaws.com/static/animations/walking_cycle.glb',
+      'https://superviz2homologmediaserver.s3.amazonaws.com/static/models/model-with-animations.gltf',
     avatarThumbnail: '',
-    avatarScale: '0.2',
-    avatarHeight: '0',
+    avatarScale: '0.01',
+    avatarHeight: '1.1',
     isPointersEnabled: false,
     isAvatarsEnabled: true,
     camera: null,
@@ -234,9 +234,10 @@ export default {
         const avatars = this.threejsAdapterInstance?.getAvatars()
         Object.values(avatars)?.forEach((avatar) => {
           if (avatar && avatar.isMoving) {
-            avatar.playAnimation('Take 001')
-          } else {
-            avatar.stopAnimation('Take 001')
+            avatar.playAnimation('Walk')
+          } 
+          if (avatar && !avatar.isMoving) {
+            avatar.playAnimation('Idle')
           }
         })
       }, 5)
