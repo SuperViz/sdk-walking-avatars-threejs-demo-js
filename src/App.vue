@@ -54,11 +54,11 @@
       </aside>
     </section>
     <Model
-        class='model'
-        modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
-        @loaded="onModelLoaded"
-        :player="player"
-      ></Model>
+      class='model'
+      modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
+      @loaded="onModelLoaded"
+      :player="player"
+    ></Model>
   </main>
 </template>
 
@@ -226,10 +226,7 @@ export default {
         isPointersEnabled: this.isPointersEnabled,
       });
 
-
-      window.dispatchEvent(new Event('resize'));
-
-      //animations interval
+      // animations interval
       window.setInterval(() => {
         if (this.manager && this.manager.scene.currentControls === 'orbit') {
           return;
@@ -242,7 +239,7 @@ export default {
             avatar.stopAnimation('Take 001')
           }
         })
-      }, 10)
+      }, 5)
     },
     onModelLoaded({ manager }) {
       this.camera = manager.scene.camera;
@@ -394,8 +391,8 @@ main {
   z-index: -1;
   position: absolute;
   width: 100vw;
-  height: 100hw;
+  height: 100%;
   left: 0;
-  top: 0;
+  top: 12px;
 }
 </style>
