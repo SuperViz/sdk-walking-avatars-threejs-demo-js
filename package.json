@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@superviz/sdk": "2.18.0",
+    "@superviz/sdk": "2.17.1-rc.1",
     "@superviz/sv-components": "^0.12.57",
     "@superviz/sv-icons": "^0.6.0",
     "@superviz/threejs-adapter": "^0.0.5",
@@ -23,6 +23,7 @@
     "vue": "^2.7.4",
     "vue-json-tree-view": "^2.1.6",
     "vue-template-compiler": "^2.7.10",
+    "web-ifc": "^0.0.36",
     "web-ifc-three": "^0.0.121"
   },
   "devDependencies": {

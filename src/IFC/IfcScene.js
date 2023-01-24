@@ -21,7 +21,6 @@ import { SHAPE_TYPES } from 'cannon-es';
 export class IfcScene {
   constructor(id, player) {
     this.player = player;
-    console.log('player', player)
     this.clock = new Clock();
     const self = this;
     this.ifcModel = null;
@@ -32,13 +31,13 @@ export class IfcScene {
     this.camera = new PerspectiveCamera(60, this.width / this.height, 0.1, 1000);
     this.cameraOrigin = new Vector3(0, 1.5, 0);
     this.renderer = new WebGLRenderer({
-      antialias: true,
+      antialias: false,
       canvas: this.threeCanvas,
     });
     this.renderer.setSize(this.width, this.height);
     this.ifcModels = [];
     this.grid = new GridHelper();
-    this.scene.background = new Color(0x6c757d);
+    this.scene.background = new Color('white');
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     // this.camera.position.z = 5;
     this.setupLights();
@@ -168,7 +167,7 @@ export class IfcScene {
     if (this.currentControls === 'orbit') {
       self.orbitControls.update();
     }
-    self.world.step(delta);
+    // self.world.step(delta);
 
     self.renderer.render(self.scene, self.camera);
 
@@ -361,12 +360,15 @@ export class IfcScene {
     // Add the shape to a CANNON.Body.
     this.world.addBody(rigidBody);
     */
+
+    /*
   const planeShape = new CANNON.Plane()
   
   const planeBody = new CANNON.Body({ mass: 0 })
   planeBody.addShape(planeShape);
   planeBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2)
   this.world.addBody(planeBody)
+  */
 
   }
 
@@ -400,14 +402,12 @@ export class IfcScene {
   }
 
   setControls(type) {
-    console.log('change controls to ', type)
     this.calculateWidthHeight();
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     if (type === 'first') {
       this.currentControls = 'first'
-      console.log('set first')
       this.camera.remove(this.player)
       this.firstPersonContainer.position.set(this.camera.position.x, 0, this.camera.position.z )
       this.orbitControls.enabled = false;
@@ -417,7 +417,6 @@ export class IfcScene {
       this.camera.position.set( 0, 1.2, -3 );
       this.camera.lookAt(this.cameraOrigin);
     } else {
-      console.log('set orbit')
       this.firstPersonContainer.remove(this.camera);
       this.firstPersonContainer.remove(this.player)
       this.currentControls = 'orbit'

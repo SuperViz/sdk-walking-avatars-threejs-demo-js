@@ -11,9 +11,11 @@ export default class IfcManager {
         self.ifcModels = [];
         self.ifcLoader = new IFCLoader();
         self.setupIfcLoader();
+        /*
         self.raycaster = new Raycaster();
         self.raycaster.firstHitOnly = true;
         self.mouse = new Vector2();
+        */
     }
 
     setupThreeMeshBVH() {
@@ -27,10 +29,11 @@ export default class IfcManager {
 
     async setupIfcLoader() {
         let self = this;
+        // self.ifcLoader.ifcManager.setWasmPath("public/IFCjs/")
         await self.ifcLoader.ifcManager.useWebWorkers(true, "../IFCjs/IFCWorker.js")
         self.ifcLoader.ifcManager.applyWebIfcConfig({
-            COORDINATE_TO_ORIGIN: true,
-            USE_FAST_BOOLS: false
+            COORDINATE_TO_ORIGIN: false,
+            USE_FAST_BOOLS: true
         });
         self.setupThreeMeshBVH();
     }

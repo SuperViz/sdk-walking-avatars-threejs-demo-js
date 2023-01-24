@@ -53,7 +53,7 @@
         <tree-view :data="userList"></tree-view>
       </aside>
       <Model
-        modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/rst_advanced_sample_project.ifc"
+        modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
         @loaded="onModelLoaded"
         :player="player"
       ></Model>
@@ -176,6 +176,7 @@ export default {
       this.sdk.subscribe(MeetingEvent.DESTROY, this.onDestroy);
 
       this.isCollapsed = true;
+      window.dispatchEvent(new Event('resize'));
     },
     destroy() {
       this.sdk.disconnectAdapter();
@@ -252,7 +253,6 @@ export default {
       this.destroy();
     },
     onJoinedMeeting() {
-      console.log('onJoinedMeeting')
       this.initialize3D();
     },
   },

@@ -10,7 +10,7 @@
 
 <script>
 import IfcManager from '../IFC/IfcManager';
-import { Raycaster, Vector2 } from 'three';
+import { Raycaster, Vector2, Matrix4 } from 'three';
 
 export default {
   name: 'Model',
@@ -59,13 +59,24 @@ export default {
       component.threeCanvas = document.getElementById('model');
       component.threeCanvas.ondblclick = component.pick;
     },
+    async loadIFC () {
+      let self = this
+      self.IFCManager.scene.ifcModel = await self.IFCManager.ifcLoader.loadAsync(this.modelUrl);
+      const matrixArr = await self.IFCManager.ifcLoader.ifcManager.ifcAPI.GetCoordinationMatrix(self.IFCManager.scene.ifcModel.modelID);
+      const matrix = new Matrix4().fromArray(matrixArr);
+      self.IFCManager.ifcLoader.ifcManager.setupCoordinationMatrix(matrix);
+      self.IFCManager.scene.add(self.IFCManager.scene.ifcModel);
+      self.onLoaded();
+    }
+  },
+  beforeMount () {
   },
   async mounted() {
-    const self = this;
     this.IFCManager = new IfcManager('model', this.player);
-    self.IFCManager.scene.ifcModel = await self.IFCManager.ifcLoader.loadAsync(this.modelUrl);
-    self.IFCManager.scene.add(self.IFCManager.scene.ifcModel.mesh);
-    self.onLoaded();
+    
+    setTimeout(() => {
+      this.loadIFC()
+    }, 200)
   },
   watch: {
     async modelUrl(modelUrl) {
