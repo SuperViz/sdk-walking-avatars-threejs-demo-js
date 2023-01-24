@@ -73,8 +73,8 @@ import SuperViz, {
   DeviceEvent,
   MeetingState,
   MeetingConnectionStatus,
-// } from '../../sdk_/dist';
 } from '@superviz/sdk';
+//// } from '../../sdk_/dist';
 
 import bubble from './components/bubble.vue';
 
