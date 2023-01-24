@@ -52,19 +52,20 @@
         <sv-heading size="h6">User list</sv-heading>
         <tree-view :data="userList"></tree-view>
       </aside>
-      <Model
+    </section>
+    <Model
+        class='model'
         modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
         @loaded="onModelLoaded"
         :player="player"
       ></Model>
-    </section>
   </main>
 </template>
 
 <script>
 import Model from './components/Model.vue';
-// import { ThreeAdapter } from '../../threejs-adapter/src';
-import { ThreeAdapter } from '@superviz/threejs-adapter';
+import { ThreeAdapter } from '../../threejs-adapter/src';
+// import { ThreeAdapter } from '@superviz/threejs-adapter';
 import * as THREE from 'three';
 import IfcManager from './IFC/IfcManager';
 
@@ -73,8 +74,8 @@ import SuperViz, {
   DeviceEvent,
   MeetingState,
   MeetingConnectionStatus,
-} from '@superviz/sdk';
-//// } from '../../sdk_/dist';
+} from '../../sdk_/dist';
+// // } from '@superviz/sdk';
 
 import bubble from './components/bubble.vue';
 
@@ -176,7 +177,6 @@ export default {
       this.sdk.subscribe(MeetingEvent.DESTROY, this.onDestroy);
 
       this.isCollapsed = true;
-      window.dispatchEvent(new Event('resize'));
     },
     destroy() {
       this.sdk.disconnectAdapter();
@@ -303,8 +303,6 @@ main {
   width: 100%;
   height: 100%;
 
-  background-color: color('sv-color-purple-gray-80');
-
   header {
     padding: 12px;
     width: 100%;
@@ -330,6 +328,10 @@ main {
 
     gap: 12px;
     position: relative;
+    width: fit-content;
+    z-index: 1;
+    background-color: color('sv-color-purple-gray-80');
+
   }
 
   section.hidden {
@@ -386,5 +388,14 @@ main {
   .tree-view-wrapper {
     color: color('sv-color-white');
   }
+}
+
+.model {
+  z-index: -1;
+  position: absolute;
+  width: 100vw;
+  height: 100hw;
+  left: 0;
+  top: 0;
 }
 </style>
