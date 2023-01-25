@@ -24,7 +24,7 @@ export default class IfcManager {
 
     async setupIfcLoader() {
         let self = this;
-        self.ifcLoader.ifcManager.setWasmPath("public/IFCjs/")
+        self.ifcLoader.ifcManager.setWasmPath("https://superviz2homologmediaserver.s3.amazonaws.com/static/wasm/")
         await self.ifcLoader.ifcManager.useWebWorkers(false, "../IFCjs/IFCWorker.js")
         self.ifcLoader.ifcManager.applyWebIfcConfig({
             COORDINATE_TO_ORIGIN: false,
