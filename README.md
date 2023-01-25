@@ -1,4 +1,4 @@
-# SuperViz + Matteport Vue.js DEMO
+# SuperViz + Three Vue.js DEMO
 
 
 <p align="center">
