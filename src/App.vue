@@ -28,6 +28,7 @@
           <sv-checkbox label="enable avatars" v-model="isAvatarsEnabled" />
           <sv-checkbox label="enable pointers" v-model="isPointersEnabled" />
           <sv-checkbox label="render local avatar" v-model="renderLocalAvatar" />
+          <sv-checkbox label="enable name" v-model="isNameEnabled" />
 
           <sv-button-group wrap>
             <sv-button @click="initialize" :disabled="disableInitializeButton" full-width
@@ -64,7 +65,7 @@
 
 <script>
 import Model from './components/Model.vue';
-import { ThreeAdapter } from '../../threejs-adapter/src';
+// import { ThreeAdapter } from '../../threejs-adapter/src';
 import { ThreeAdapter } from '@superviz/threejs-adapter';
 import * as THREE from 'three';
 import IfcManager from './IFC/IfcManager';
@@ -75,7 +76,7 @@ import SuperViz, {
   MeetingState,
   MeetingConnectionStatus,
 } from '@superviz/sdk';
-// } from '../../sdk_/dist';
+//} from '../../sdk_/dist';
 
 import bubble from './components/bubble.vue';
 
@@ -111,6 +112,7 @@ export default {
     scene: null,
     threejsAdapterInstance: null,
     renderLocalAvatar: true,
+    isNameEnabled: true,
     player: null,
     manager: null
   }),
@@ -219,11 +221,11 @@ export default {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
-          renderLocalAvatar: this.renderLocalAvatar,
-          showName: true
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
         isPointersEnabled: this.isPointersEnabled,
+        renderLocalAvatar: this.renderLocalAvatar,
+        isNameEnabled: this.isNameEnabled
       });
 
       // animations interval
