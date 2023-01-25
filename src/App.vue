@@ -28,6 +28,7 @@
           <sv-checkbox label="enable avatars" v-model="isAvatarsEnabled" />
           <sv-checkbox label="enable pointers" v-model="isPointersEnabled" />
           <sv-checkbox label="render local avatar" v-model="renderLocalAvatar" />
+          <sv-checkbox label="enable name" v-model="isNameEnabled" />
 
           <sv-button-group wrap>
             <sv-button @click="initialize" :disabled="disableInitializeButton" full-width
@@ -52,12 +53,13 @@
         <sv-heading size="h6">User list</sv-heading>
         <tree-view :data="userList"></tree-view>
       </aside>
-      <Model
-        modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/rst_advanced_sample_project.ifc"
-        @loaded="onModelLoaded"
-        :player="player"
-      ></Model>
     </section>
+    <Model
+      class='model'
+      modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
+      @loaded="onModelLoaded"
+      :player="player"
+    ></Model>
   </main>
 </template>
 
@@ -74,8 +76,8 @@ import SuperViz, {
   MeetingState,
   MeetingConnectionStatus,
 } from '@superviz/sdk';
+//} from '../../sdk_/dist';
 
-// } from '../../sdk_/dist';
 import bubble from './components/bubble.vue';
 
 const DEVELOPER_KEY = import.meta.env.VITE_SUPERVIZ_DEVELOPER_TOKEN;
@@ -100,16 +102,17 @@ export default {
     meetingState: MeetingState.FRAME_UNINITIALIZED,
     connectionState: MeetingConnectionStatus.NOT_AVAILABLE,
     avatarUrl:
-      'https://superviz2homologmediaserver.s3.amazonaws.com/static/animations/walking_cycle.glb',
+      'https://superviz2homologmediaserver.s3.amazonaws.com/static/models/model-with-animations.gltf',
     avatarThumbnail: '',
-    avatarScale: '0.2',
-    avatarHeight: '0',
+    avatarScale: '0.01',
+    avatarHeight: '1.1',
     isPointersEnabled: false,
     isAvatarsEnabled: true,
     camera: null,
     scene: null,
-    threeAdapter: null,
+    threejsAdapterInstance: null,
     renderLocalAvatar: true,
+    isNameEnabled: true,
     player: null,
     manager: null
   }),
@@ -117,7 +120,6 @@ export default {
     this.player = new THREE.Object3D();
   },
   mounted() {
-    console.log('p', this.player)
     const url = new URL(window.location.href);
     this.userId = url.searchParams.get('userId') || '';
     this.roomId = url.searchParams.get('roomId') || '';
@@ -208,42 +210,39 @@ export default {
       }
     },
     async initialize3D() {
-      if (this.threeAdapter) {
+      if (this.threejsAdapterInstance) {
         this.sdk.disconnectAdapter();
       }
       if (!this.scene) {
         console.error('no scene yet');
         return;
       }
-      this.threeAdapter = new ThreeAdapter(this.scene, this.camera, this.player);
-      console.log('conecta')
-      this.sdk.connectAdapter(this.threeAdapter, {
+      this.threejsAdapterInstance = this.sdk.connectAdapter(new ThreeAdapter(this.scene, this.camera, this.player), {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
-          renderLocalAvatar: this.renderLocalAvatar,
-          showName: true
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
         isPointersEnabled: this.isPointersEnabled,
+        renderLocalAvatar: this.renderLocalAvatar,
+        isNameEnabled: this.isNameEnabled
       });
 
-
-      window.dispatchEvent(new Event('resize'));
-
-      //animations interval
+      // animations interval
       window.setInterval(() => {
         if (this.manager && this.manager.scene.currentControls === 'orbit') {
           return;
         }
-        Object.values(this.threeAdapter?.avatars)?.forEach((avatar) => {
+        const avatars = this.threejsAdapterInstance?.getAvatars()
+        Object.values(avatars)?.forEach((avatar) => {
           if (avatar && avatar.isMoving) {
-            avatar.playAnimation('Take 001')
-          } else {
-            avatar.stopAnimation('Take 001')
+            avatar.playAnimation('Walk')
+          } 
+          if (avatar && !avatar.isMoving) {
+            avatar.playAnimation('Idle')
           }
         })
-      }, 10)
+      }, 5)
     },
     onModelLoaded({ manager }) {
       this.camera = manager.scene.camera;
@@ -254,7 +253,6 @@ export default {
       this.destroy();
     },
     onJoinedMeeting() {
-      console.log('onJoinedMeeting')
       this.initialize3D();
     },
   },
@@ -305,8 +303,6 @@ main {
   width: 100%;
   height: 100%;
 
-  background-color: color('sv-color-purple-gray-80');
-
   header {
     padding: 12px;
     width: 100%;
@@ -332,6 +328,10 @@ main {
 
     gap: 12px;
     position: relative;
+    width: fit-content;
+    z-index: 1;
+    background-color: color('sv-color-purple-gray-80');
+
   }
 
   section.hidden {
@@ -388,5 +388,14 @@ main {
   .tree-view-wrapper {
     color: color('sv-color-white');
   }
+}
+
+.model {
+  z-index: -1;
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  left: 0;
+  top: 12px;
 }
 </style>
