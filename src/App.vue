@@ -164,6 +164,7 @@ export default {
         defaultAvatars: true,
         enableFollow: true,
         enableGoTo: true,
+        enableGather: true,
       });
       this.sdk.subscribe(MeetingEvent.MEETING_SAME_USER_ERROR, this.onSameAccoutError);
       this.sdk.subscribe(MeetingEvent.MEETING_DEVICES_CHANGE, this.onDevicesChange);
