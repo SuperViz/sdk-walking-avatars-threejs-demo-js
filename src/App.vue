@@ -76,7 +76,7 @@ import SuperViz, {
   MeetingState,
   MeetingConnectionStatus,
 } from '@superviz/sdk';
-//} from '../../sdk_/dist';
+// } from '../../sdk_/dist';
 
 import bubble from './components/bubble.vue';
 
@@ -222,6 +222,7 @@ export default {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
+          pointerOrigin: { x: 0.25, y: 0.1, z: 0 }
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
         isPointersEnabled: this.isPointersEnabled,
@@ -231,7 +232,7 @@ export default {
 
       // animations interval
       window.setInterval(() => {
-        if (this.manager && this.manager.scene.currentControls === 'orbit') {
+        if (this.manager || !this.threejsAdapterInstance) {
           return;
         }
         const avatars = this.threejsAdapterInstance?.getAvatars()
