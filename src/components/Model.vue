@@ -62,6 +62,7 @@ export default {
     async loadIFC () {
       let self = this
       self.IFCManager.scene.ifcModel = await self.IFCManager.ifcLoader.loadAsync(this.modelUrl);
+      console.log('model', self.IFCManager.scene.ifcModel)
       const matrixArr = await self.IFCManager.ifcLoader.ifcManager.ifcAPI.GetCoordinationMatrix(self.IFCManager.scene.ifcModel.modelID);
       const matrix = new Matrix4().fromArray(matrixArr);
       self.IFCManager.ifcLoader.ifcManager.setupCoordinationMatrix(matrix);
@@ -80,9 +81,7 @@ export default {
         percentage: this.loadedPercentage
       });
     })
-    setTimeout(() => {
-      this.loadIFC()
-    }, 200)
+    this.loadIFC()
   },
   watch: {
     async modelUrl(modelUrl) {
@@ -101,13 +100,7 @@ export default {
   top: 0%;
   width: 100% !important;
   height: 100% !important;
-}
 
-#file-input {
-  position: absolute;
-  left: 0%;
-  top: 0%;
-  z-index: 100;
 }
 
 #properties-text {

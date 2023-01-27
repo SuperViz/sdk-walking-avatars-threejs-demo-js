@@ -53,14 +53,18 @@
         <sv-heading size="h6">User list</sv-heading>
         <tree-view :data="userList"></tree-view>
       </aside>
+      <sv-progress-circular v-if="!isLoaded" class="progress" color="sv-color-original-primary" :indeterminate="true"/>
     </section>
+  
     <Model
       class='model'
-      modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/BasicHouse.ifc"
+      :class="{ 'transparent': !isLoaded}"
+      modelUrl="https://raw.githubusercontent.com/andrewisen/bim-whale-ifc-samples/main/LargeBuilding/IFC/LargeBuilding.ifc"
       @loaded="onModelLoaded"
       @loading="onLoading"
       :player="player"
     ></Model>
+
   </main>
 </template>
 
@@ -114,7 +118,9 @@ export default {
     renderLocalAvatar: true,
     isNameEnabled: true,
     player: null,
-    manager: null
+    manager: null,
+    progress: 0,
+    isLoaded: false
   }),
   beforeMount () {
     this.player = new THREE.Object3D();
@@ -247,9 +253,10 @@ export default {
       }, 5)
     },
     onLoading ({ percentage }) {
-      console.log(percentage)
+      this.progress = percentage;
     },
     onModelLoaded({ manager }) {
+      this.isLoaded = true
       this.camera = manager.scene.camera;
       this.scene = manager.scene.scene;
       this.manager = manager;
@@ -402,5 +409,18 @@ main {
   height: 100%;
   left: 0;
   top: 12px;
+  opacity: 1;
+  &.transparent {
+    opacity: 0 !important;
+  }
+}
+
+.progress {
+  z-index: 100;
+  max-width: 30px;
+  max-height: 30px;
+  position: fixed;
+  top: 12px !important;
+  left: 270px;
 }
 </style>

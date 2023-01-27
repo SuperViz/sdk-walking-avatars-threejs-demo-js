@@ -26,17 +26,19 @@ export class IfcScene {
     this.threeCanvas = document.getElementById(id);
     this.calculateWidthHeight(this);
     this.scene = new Scene();
-    this.camera = new PerspectiveCamera(60, this.width / this.height, 0.1, 1000);
+    this.camera = new PerspectiveCamera(60, this.width / this.height, 0.2, 500);
     this.renderer = new WebGLRenderer({
-      antialias: false,
+      antialias: true,
       canvas: this.threeCanvas,
+      precision: 'highp',
+      logarithmicDepthBuffer: true
     });
     this.renderer.outputEncoding = sRGBEncoding;
 
     this.renderer.setSize(this.width, this.height);
-    this.ifcModels = [];
     this.grid = new GridHelper();
-    this.scene.background = new Color('white');
+    this.scene.background = new Color(0x8cc7de);
+
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.setupLights();
     this.setupWindowResize();
@@ -59,14 +61,13 @@ export class IfcScene {
 
 
     this.followCamPivot.add(this.followCam)
-
     this.scene.add(this.followCamPivot)
 
     this.animate(self);
 
     document.addEventListener( 'mousewheel', (e) => {
       let newVal = this.followCam.position.z + e.deltaY * 0.05
-      if (newVal > 0.25 && newVal < 10) {
+      if (newVal > 0.25 && newVal < 15) {
           this.followCam.position.z = newVal
       }
       return false
@@ -116,15 +117,15 @@ export class IfcScene {
           break;
       }
     });
-    window.addEventListener("pointerdown", (e) => {
+    window.addEventListener("mousedown", (e) => {
       this.mousedown = true;
     });
     
-    window.addEventListener("pointerup", (e) => {
+    window.addEventListener("mouseup", (e) => {
       this.mousedown = false;
     });
     
-    window.addEventListener("pointermove", (e) => {
+    window.addEventListener("mousemove", (e) => {
       if(this.mousedown) {
         const { movementX, movementY } = e;
 
@@ -136,8 +137,6 @@ export class IfcScene {
   }
 
   animate(self) {
-    const delta = self.clock.getDelta();
-    self.renderer.render(self.scene, self.camera);
     self.checkMoving();
     this.followCamPivot.position.copy(this.player.position)
 
@@ -145,6 +144,8 @@ export class IfcScene {
     this.camera.position.lerpVectors(this.camera.position, this.tempCamToPos, 0.1);
 
     this.camera.quaternion.copy(this.followCamPivot.quaternion);
+
+    self.renderer.render(self.scene, self.camera);
     requestAnimationFrame(function () {
       self.animate(self);
     });
@@ -230,8 +231,18 @@ export class IfcScene {
   }
 
   add(obj) {
-    this.ifcModel = this.scene.add(obj);
-    this.ifcModels.push(this.ifcModel);
+    this.scene.add(obj);
+    let i = 0
+    // fixes IFC materials flickering
+    obj.material.forEach((mat) => {
+      i++
+      mat.flatShading = true
+      mat.side = 0
+      if (i == 10) {
+        mat.side = 1
+      }
+    })
+
   }
 
   fitModelToFrame(model) {
