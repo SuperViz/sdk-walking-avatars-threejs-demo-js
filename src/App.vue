@@ -65,8 +65,8 @@
 
 <script>
 import Model from './components/Model.vue';
-// import { ThreeAdapter } from '../../threejs-adapter/src';
-import { ThreeAdapter } from '@superviz/threejs-adapter';
+// import { ThreePlugin } from '../../threejs-adapter/src';
+import { ThreePlugin } from '@superviz/threejs-plugin';
 import * as THREE from 'three';
 import IfcManager from './IFC/IfcManager';
 
@@ -110,7 +110,7 @@ export default {
     isAvatarsEnabled: true,
     camera: null,
     scene: null,
-    threejsAdapterInstance: null,
+    pluginInstance: null,
     renderLocalAvatar: true,
     isNameEnabled: true,
     player: null,
@@ -211,14 +211,14 @@ export default {
       }
     },
     async initialize3D() {
-      if (this.threejsAdapterInstance) {
+      if (this.pluginInstance) {
         this.sdk.disconnectAdapter();
       }
       if (!this.scene) {
         console.error('no scene yet');
         return;
       }
-      this.threejsAdapterInstance = this.sdk.connectAdapter(new ThreeAdapter(this.scene, this.camera, this.player), {
+      this.pluginInstance = this.sdk.connectAdapter(new ThreePlugin(this.scene, this.camera, this.player), {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
@@ -232,10 +232,10 @@ export default {
 
       // animations interval
       window.setInterval(() => {
-        if (this.manager || !this.threejsAdapterInstance) {
+        if (!this.manager || this.pluginInstance === null) {
           return;
         }
-        const avatars = this.threejsAdapterInstance?.getAvatars()
+        const avatars = this.pluginInstance?.getAvatars()
         Object.values(avatars)?.forEach((avatar) => {
           if (avatar && avatar.isMoving) {
             avatar.playAnimation('Walk')

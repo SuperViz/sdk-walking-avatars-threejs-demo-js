@@ -525,10 +525,10 @@
   dependencies:
     debug "^4.3.4"
 
-"@superviz/sdk@2.17.1-rc.2":
-  version "2.17.1-rc.2"
-  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.17.1-rc.2.tgz#ba16c35b4371fb7f049a0453e66af1772ff528d5"
-  integrity sha512-Y300MEC/CEeVSoSzOFIQDCGPtpdMaMa6P77k/GZM0IQJOx/xOsikV1UMLdqtrPQesG7tKr4vbEZpeq/Q94kcTw==
+"@superviz/sdk@beta":
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.21.1.tgz#e51da84d9ead4637d0dfbab877d074bf9397a71c"
+  integrity sha512-fEOoCpU24K8hLeZDWVBGYhww5+XA0oZf00rkoJ4SmUQYOA6g9HtdcIn1UWs1fD4Y3yxWi3a2B+bK9f4clQILCA==
   dependencies:
     "@superviz/immersive-core" "^0.3.1"
     "@types/jest" "^28.1.3"
@@ -567,10 +567,10 @@
   resolved "https://registry.yarnpkg.com/@superviz/sv-icons/-/sv-icons-0.6.0.tgz#5ef722b2c88db3d39042a37b4cbdd94a64940acc"
   integrity sha512-1G78XUV70z7caKRtOZqEcFJrifLAI9F1YXfBRu5T+2/Nj1tjMowP+2GUUr1bWGtXSpgj1ek4FtycfuEBPQCr7w==
 
-"@superviz/threejs-adapter@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@superviz/threejs-adapter/-/threejs-adapter-0.0.11.tgz#91465694d4dd485d3239e3d40c02a80666603b39"
-  integrity sha512-Twtji/k+ZHoL7C8YYAcETsqD37WB8X8IPlndCyWM15BmbU7oXmBLjap3RYPZ4TcSamV4ppx5W0z/kuR2a5L+jg==
+"@superviz/threejs-plugin@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@superviz/threejs-plugin/-/threejs-plugin-0.3.0.tgz#e61546d6d20261c77697dc534c410bdc94e00dc2"
+  integrity sha512-Q3V5dMf1PTXqYN/zLHs8Wu12zPQ4mFfvZ0m+2lypgEdwuLFB/RTH+Gh67nAQolrT++apQXo9T+k/nUr+/rPSEw==
   dependencies:
     three "^0.147.0"
 
