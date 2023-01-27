@@ -56,8 +56,9 @@
     </section>
     <Model
       class='model'
-      modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/TESTED_Simple_project_01.ifc"
+      modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/BasicHouse.ifc"
       @loaded="onModelLoaded"
+      @loading="onLoading"
       :player="player"
     ></Model>
   </main>
@@ -68,7 +69,6 @@ import Model from './components/Model.vue';
 // import { ThreePlugin } from '../../threejs-adapter/src';
 import { ThreePlugin } from '@superviz/threejs-plugin';
 import * as THREE from 'three';
-import IfcManager from './IFC/IfcManager';
 
 import SuperViz, {
   MeetingEvent,
@@ -102,10 +102,10 @@ export default {
     meetingState: MeetingState.FRAME_UNINITIALIZED,
     connectionState: MeetingConnectionStatus.NOT_AVAILABLE,
     avatarUrl:
-      'https://superviz2homologmediaserver.s3.amazonaws.com/static/models/model-with-animations.gltf',
+      'https://superviz2homologmediaserver.s3.amazonaws.com/static/models/PETE-GREAT3.glb',
     avatarThumbnail: '',
     avatarScale: '0.01',
-    avatarHeight: '1.1',
+    avatarHeight: '0.8',
     isPointersEnabled: false,
     isAvatarsEnabled: true,
     camera: null,
@@ -245,6 +245,9 @@ export default {
           }
         })
       }, 5)
+    },
+    onLoading ({ percentage }) {
+      console.log(percentage)
     },
     onModelLoaded({ manager }) {
       this.camera = manager.scene.camera;

@@ -567,10 +567,10 @@
   resolved "https://registry.yarnpkg.com/@superviz/sv-icons/-/sv-icons-0.6.0.tgz#5ef722b2c88db3d39042a37b4cbdd94a64940acc"
   integrity sha512-1G78XUV70z7caKRtOZqEcFJrifLAI9F1YXfBRu5T+2/Nj1tjMowP+2GUUr1bWGtXSpgj1ek4FtycfuEBPQCr7w==
 
-"@superviz/threejs-plugin@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@superviz/threejs-plugin/-/threejs-plugin-0.3.0.tgz#e61546d6d20261c77697dc534c410bdc94e00dc2"
-  integrity sha512-Q3V5dMf1PTXqYN/zLHs8Wu12zPQ4mFfvZ0m+2lypgEdwuLFB/RTH+Gh67nAQolrT++apQXo9T+k/nUr+/rPSEw==
+"@superviz/threejs-plugin@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@superviz/threejs-plugin/-/threejs-plugin-0.3.1.tgz#42980935f140b620448f6112b0510ecd0246988e"
+  integrity sha512-Nmmj5v9BKSBs1L7krRUJPYCiVTalvbd3wiYS656yJejsD5mx9jxtJLmNC927cRecfbfrAczrd3K0Vy0u3e1Wow==
   dependencies:
     three "^0.147.0"
 
@@ -1931,6 +1931,11 @@ three-mesh-bvh@^0.5.11, three-mesh-bvh@^0.5.14:
   version "0.5.21"
   resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.21.tgz#e08f5f3052d624cce36d0975692949c02359832f"
   integrity sha512-TGXPk7YwtlU5rgQJYA25OT6yAdBMeekfC4BTkGNtTWA5glb2rmEpjxvhZncRQSl73QZir2LFOQT0FjfzgG55xw==
+
+three-mesh-bvh@^0.5.22:
+  version "0.5.22"
+  resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.22.tgz#9c20fbaba1f55c7afe3fe769a90c4605e3bd53ee"
+  integrity sha512-vi9X78CoEz1VVfkKRpUZQa34SEc0QGDd9Hmyis0aeBRAmjp4BpHQ2URcirBsOvFMNBXqB9Klp8sQ9NCRsUEW0w==
 
 three-to-cannon@^4.3.0:
   version "4.3.0"

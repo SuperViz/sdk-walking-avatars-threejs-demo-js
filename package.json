@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@superviz/sdk": "beta",    
+    "@superviz/sdk": "beta",
     "@superviz/sv-components": "^0.12.57",
     "@superviz/sv-icons": "^0.6.0",
     "@superviz/threejs-plugin": "^0.3.1",
@@ -17,6 +17,7 @@
     "@vitejs/plugin-vue2-jsx": "^1.0.3",
     "cannon-es": "^0.20.0",
     "three": "^0.147.0",
+    "three-mesh-bvh": "^0.5.22",
     "three-to-cannon": "^4.3.0",
     "url": "^0.11.0",
     "vite-plugin-vue2": "^2.0.2",

@@ -9,6 +9,7 @@ import {
   Spherical,
   Quaternion,
   PerspectiveCamera,
+  sRGBEncoding,
   Scene,
   WebGLRenderer,
   GridHelper,
@@ -30,6 +31,8 @@ export class IfcScene {
       antialias: false,
       canvas: this.threeCanvas,
     });
+    this.renderer.outputEncoding = sRGBEncoding;
+
     this.renderer.setSize(this.width, this.height);
     this.ifcModels = [];
     this.grid = new GridHelper();
@@ -213,7 +216,7 @@ export class IfcScene {
     const directionalLight2 = new DirectionalLight(0xffffff, 0.8);
     directionalLight2.position.set(-1, 0.5, -1);
     this.scene.add(directionalLight2);
-    const ambientLight = new AmbientLight(0xffffee, 0.25);
+    const ambientLight = new AmbientLight(0xffffee, 0.23);
     this.scene.add(ambientLight);
   }
 

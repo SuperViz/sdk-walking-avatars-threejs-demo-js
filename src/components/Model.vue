@@ -18,6 +18,7 @@ export default {
   data() {
     return {
       entityData: '',
+      loadedPercentage: 0
     };
   },
   methods: {
@@ -72,14 +73,19 @@ export default {
   },
   async mounted() {
     this.IFCManager = new IfcManager('model', this.player);
-    
+    this.IFCManager.ifcLoader.ifcManager.setOnProgress (({loaded, total})=> {
+      const percentage = loaded / total
+      this.loadedPercentage = percentage;
+      this.$emit('loading', {
+        percentage: this.loadedPercentage
+      });
+    })
     setTimeout(() => {
       this.loadIFC()
     }, 200)
   },
   watch: {
     async modelUrl(modelUrl) {
-      console.log('model Url', modelUrl);
       self.IFCManager.scene.ifcModel = await self.IFCManager.ifcLoader.loadAsync(modelUrl);
       self.IFCManager.scene.add(self.IFCManager.scene.ifcModel.mesh);
       self.onLoaded();
