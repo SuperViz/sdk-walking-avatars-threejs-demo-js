@@ -55,7 +55,7 @@
       </aside>
       <sv-progress-circular v-if="!isLoaded" class="progress" color="sv-color-original-primary" :indeterminate="true"/>
     </section>
-  
+
     <Model
       class='model'
       :class="{ 'transparent': !isLoaded}"
@@ -70,7 +70,7 @@
 
 <script>
 import Model from './components/Model.vue';
-// import { ThreePlugin } from '../../threejs-adapter/src';
+// import { ThreePlugin } from '../../threejs-adapter/dist'
 import { ThreePlugin } from '@superviz/threejs-plugin';
 import * as THREE from 'three';
 
@@ -188,7 +188,7 @@ export default {
       this.isCollapsed = true;
     },
     destroy() {
-      this.sdk.disconnectAdapter();
+      this.sdk.unloadPlugin();
       this.sdk.destroy();
       this.sdk = null;
     },
@@ -218,13 +218,13 @@ export default {
     },
     async initialize3D() {
       if (this.pluginInstance) {
-        this.sdk.disconnectAdapter();
+        this.sdk.unloadPlugin();
       }
       if (!this.scene) {
         console.error('no scene yet');
         return;
       }
-      this.pluginInstance = this.sdk.connectAdapter(new ThreePlugin(this.scene, this.camera, this.player), {
+      this.pluginInstance = this.sdk.loadPlugin(new ThreePlugin(this.scene, this.camera, this.player), {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
@@ -245,7 +245,7 @@ export default {
         Object.values(avatars)?.forEach((avatar) => {
           if (avatar && avatar.isMoving) {
             avatar.playAnimation('Walk')
-          } 
+          }
           if (avatar && !avatar.isMoving) {
             avatar.playAnimation('Idle')
           }
