@@ -11,7 +11,7 @@
     "@superviz/sdk": "beta",
     "@superviz/sv-components": "^0.12.57",
     "@superviz/sv-icons": "^0.6.0",
-    "@superviz/threejs-plugin": "^0.3.2",
+    "@superviz/threejs-plugin": "^0.4.2",
     "@vitejs/plugin-legacy": "^2.0.1",
     "@vitejs/plugin-vue2": "^1.1.2",
     "@vitejs/plugin-vue2-jsx": "^1.0.3",

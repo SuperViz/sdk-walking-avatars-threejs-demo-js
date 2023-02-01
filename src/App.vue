@@ -109,7 +109,7 @@ export default {
       'https://superviz2homologmediaserver.s3.amazonaws.com/static/models/PETE-GREAT3.glb',
     avatarThumbnail: '',
     avatarScale: '0.01',
-    avatarHeight: '0.8',
+    avatarHeight: '0.9',
     isPointersEnabled: false,
     isAvatarsEnabled: true,
     camera: null,

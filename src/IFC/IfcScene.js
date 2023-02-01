@@ -14,7 +14,8 @@ import {
   WebGLRenderer,
   GridHelper,
   Group,
-  Object3D
+  Object3D,
+  Euler
 } from 'three';
 export class IfcScene {
   constructor(id, player) {
@@ -26,12 +27,11 @@ export class IfcScene {
     this.threeCanvas = document.getElementById(id);
     this.calculateWidthHeight(this);
     this.scene = new Scene();
-    this.camera = new PerspectiveCamera(60, this.width / this.height, 0.2, 500);
+    this.camera = new PerspectiveCamera(60, this.width / this.height, 0.03, 700);
     this.renderer = new WebGLRenderer({
       antialias: true,
       canvas: this.threeCanvas,
-      precision: 'highp',
-      logarithmicDepthBuffer: true
+      logarithmicDepthBuffer: false
     });
     this.renderer.outputEncoding = sRGBEncoding;
 
@@ -159,7 +159,7 @@ export class IfcScene {
     
     this.player.getWorldDirection(this.tempModelVector);
     const playerDirection = this.tempModelVector.setY(0).normalize();
-
+    playerDirection.applyEuler(new Euler(0,3.14,0))
     const cameraAngle = cameraDirection.angleTo(this.xAxis) * (cameraDirection.z > 0 ? 1 : -1);
     const playerAngle = playerDirection.angleTo(this.xAxis) * (playerDirection.z > 0 ? 1 : -1);
 
