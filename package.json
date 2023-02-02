@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@superviz/sdk": "beta",
+    "@superviz/sdk": "^2.22.1",
     "@superviz/sv-components": "^0.12.57",
     "@superviz/sv-icons": "^0.6.0",
     "@superviz/threejs-plugin": "^0.4.2",

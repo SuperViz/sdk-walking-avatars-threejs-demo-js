@@ -525,10 +525,10 @@
   dependencies:
     debug "^4.3.4"
 
-"@superviz/sdk@beta":
-  version "2.21.1"
-  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.21.1.tgz#e51da84d9ead4637d0dfbab877d074bf9397a71c"
-  integrity sha512-fEOoCpU24K8hLeZDWVBGYhww5+XA0oZf00rkoJ4SmUQYOA6g9HtdcIn1UWs1fD4Y3yxWi3a2B+bK9f4clQILCA==
+"@superviz/sdk@^2.22.1":
+  version "2.22.1"
+  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.22.1.tgz#e14a02ecf3140159d853ae98454808d0f386c9ed"
+  integrity sha512-wbNvgvarp2fGJr8JB0a+d0jd2auzQ96ApRwEAqYNLdVsPgYrtRsoA/tIPx64JZGpDRJ/2lBGuMm7C/xYGUd2/A==
   dependencies:
     "@superviz/immersive-core" "^0.3.1"
     "@types/jest" "^28.1.3"
@@ -700,9 +700,9 @@
   integrity sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==
 
 "@types/yargs@^17.0.8":
-  version "17.0.20"
-  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-17.0.20.tgz#107f0fcc13bd4a524e352b41c49fe88aab5c54d5"
-  integrity sha512-eknWrTHofQuPk2iuqDm1waA7V6xPlbgBoaaXEgYkClhLOnB0TtbW+srJaOToAgawPxPlHQzwypFA2bhZaUGP5A==
+  version "17.0.22"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-17.0.22.tgz#7dd37697691b5f17d020f3c63e7a45971ff71e9a"
+  integrity sha512-pet5WJ9U8yPVRhkwuEIp5ktAeAqRZOq4UdAyWLWzxbtpyXnzbtLdKiXAjJzi/KLmPGS9wk86lUFWZFN6sISo4g==
   dependencies:
     "@types/yargs-parser" "*"
 
@@ -844,9 +844,9 @@
     prettier "^1.18.2 || ^2.0.0"
 
 ably@^1.2.29:
-  version "1.2.34"
-  resolved "https://registry.yarnpkg.com/ably/-/ably-1.2.34.tgz#5e78dd9a6b358b893678e860014c72cb9a1b03a7"
-  integrity sha512-ERc9kxp9eLtqwWjjdzUzEbKZ1ydup3BWGNH8toNcCpimGq/y/+3zuR5xO9VXlEWGFf5oYXLdSbudj/mTU/cp3w==
+  version "1.2.35"
+  resolved "https://registry.yarnpkg.com/ably/-/ably-1.2.35.tgz#fc5ade4722daad8ca2a2c1029c596daceb496420"
+  integrity sha512-AQ75uBEz5frC78Z9ogFWZXTMS/Ohw1rnH213iR+HP/TE56LHNClP5pAu3WQhbtV9r719j6LjdkBJdcQHUZsqsQ==
   dependencies:
     "@ably/msgpack-js" "^0.4.0"
     got "^11.8.2"
