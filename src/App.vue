@@ -70,8 +70,7 @@
 
 <script>
 import Model from './components/Model.vue';
-// import { ThreePlugin } from '../../threejs-adapter/src';
-import { ThreePlugin } from '@superviz/threejs-plugin';
+import { ThreeJsPlugin } from '@superviz/threejs-plugin';
 import * as THREE from 'three';
 
 import SuperViz, {
@@ -80,7 +79,6 @@ import SuperViz, {
   MeetingState,
   MeetingConnectionStatus,
 } from '@superviz/sdk';
-// } from '../../sdk_/dist';
 
 import bubble from './components/bubble.vue';
 
@@ -120,7 +118,8 @@ export default {
     player: null,
     manager: null,
     progress: 0,
-    isLoaded: false
+    isLoaded: false,
+    walkingAnimationInterval: null
   }),
   beforeMount () {
     this.player = new THREE.Object3D();
@@ -147,15 +146,14 @@ export default {
   methods: {
     async initialize() {
       this.sdk = await SuperViz.init(DEVELOPER_KEY, {
-        userGroup: {
+        group: {
           id: 'your-organizationId',
           name: 'developer workspace',
         },
-        user: {
+        participant: {
           id: this.userId,
           name: this.userName,
-          isHostCandidate: this.isHostCandidate,
-          isAudience: this.isAudience,
+          type: this.isHostCandidate ? 'host' : 'guest',
           avatar: {
             model: this.avatarUrl,
             thumbnail: this.avatarThumbnail,
@@ -172,11 +170,11 @@ export default {
         enableGoTo: true,
         enableGather: true,
       });
-      this.sdk.subscribe(MeetingEvent.MEETING_SAME_USER_ERROR, this.onSameAccoutError);
+      this.sdk.subscribe(MeetingEvent.MEETING_SAME_PARTICIPANT_ERROR, this.onSameAccoutError);
       this.sdk.subscribe(MeetingEvent.MEETING_DEVICES_CHANGE, this.onDevicesChange);
-      this.sdk.subscribe(MeetingEvent.MEETING_USER_LIST_UPDATE, this.onUserListUpdate);
+      this.sdk.subscribe(MeetingEvent.MEETING_PARTICIPANT_LIST_UPDATE, this.onUserListUpdate);
       this.sdk.subscribe(MeetingEvent.MEETING_STATE_UPDATE, this.onMeetingStateUpdate);
-      this.sdk.subscribe(MeetingEvent.MY_USER_JOINED, this.onJoinedMeeting);
+      this.sdk.subscribe(MeetingEvent.MY_PARTICIPANT_JOINED, this.onJoinedMeeting);
       this.sdk.subscribe(MeetingEvent.MEETING_LEAVE, this.onLeftMeeting);
 
       this.sdk.subscribe(
@@ -188,6 +186,9 @@ export default {
       this.isCollapsed = true;
     },
     destroy() {
+      console.log('destroy')
+      clearInterval(this.walkingAnimationInterval)
+      this.pluginInstance = null
       this.sdk.disconnectAdapter();
       this.sdk.destroy();
       this.sdk = null;
@@ -218,13 +219,13 @@ export default {
     },
     async initialize3D() {
       if (this.pluginInstance) {
-        this.sdk.disconnectAdapter();
+        this.sdk.unloadPlugin();
       }
       if (!this.scene) {
         console.error('no scene yet');
         return;
       }
-      this.pluginInstance = this.sdk.connectAdapter(new ThreePlugin(this.scene, this.camera, this.player), {
+      this.pluginInstance = this.sdk.loadPlugin(new ThreeJsPlugin(this.scene, this.camera, this.player), {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
@@ -237,11 +238,15 @@ export default {
       });
 
       // animations interval
-      window.setInterval(() => {
-        if (!this.manager || this.pluginInstance === null) {
+      this.walkingAnimationInterval = setInterval(() => {
+        if (!this.manager || !this.pluginInstance || !this.pluginInstance?.getAvatars) {
+          clearInterval(this.walkingAnimationInterval)
           return;
         }
         const avatars = this.pluginInstance?.getAvatars()
+        if (!avatars) {
+          return
+        }
         Object.values(avatars)?.forEach((avatar) => {
           if (avatar && avatar.isMoving) {
             avatar.playAnimation('Walk')
@@ -262,6 +267,9 @@ export default {
       this.manager = manager;
     },
     onLeftMeeting() {
+      console.warn('left meeting')
+      clearInterval(this.walkingAnimationInterval)
+      this.pluginInstance = null
       this.destroy();
     },
     onJoinedMeeting() {
