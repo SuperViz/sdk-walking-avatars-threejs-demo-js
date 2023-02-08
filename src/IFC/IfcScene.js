@@ -6,17 +6,16 @@ import {
   AmbientLight,
   Color,
   DirectionalLight,
-  Spherical,
-  Quaternion,
   PerspectiveCamera,
   sRGBEncoding,
   Scene,
   WebGLRenderer,
   GridHelper,
-  Group,
   Object3D,
   Euler
 } from 'three';
+import nipplejs from 'nipplejs';
+
 export class IfcScene {
   constructor(id, player) {
     this.player = player;
@@ -62,11 +61,16 @@ export class IfcScene {
 
     this.player.position.set(6,0,6)
 
+    this.isMobile = window.innerWidth < 800
+
 
     this.followCamPivot.add(this.followCam)
     this.scene.add(this.followCamPivot)
 
     this.animate(self);
+
+    this.forwardForce = 0;
+    this.turnForce = Math.PI/2;
 
     document.addEventListener( 'mousewheel', (e) => {
       let newVal = this.followCam.position.z + e.deltaY * 0.05
@@ -87,6 +91,7 @@ export class IfcScene {
         case 'KeyA':
         case 'ArrowLeft':
           this.movingLeft = true;
+          this.turnForce = -Math.PI/2;
           break;
         case 'KeyS':
         case 'ArrowDown':
@@ -95,6 +100,7 @@ export class IfcScene {
         case 'KeyD':
         case 'ArrowRight':
           this.movingRight = true;
+          this.turnForce = Math.PI/2;
           break;
       }
     });
@@ -137,6 +143,60 @@ export class IfcScene {
         return false;
       }
     })
+    if (this.isMobile) {
+      this.addJoystick()
+    }
+  }
+
+  addJoystick () {
+    const options = {
+      zone: document.getElementById('joystickWrapper1'),
+      size: 120,
+      multitouch: true,
+      maxNumberOfNipples: 2,
+      mode: 'static',
+      restJoystick: true,
+      shape: 'circle',
+      // position: { top: 20, left: 20 },
+      position: { top: '0px', right: '60px' },
+      dynamicPage: true,
+    }
+  
+      const joyManager = nipplejs.create(options);
+  
+      joyManager['0'].on('move', (evt, data)=> {
+        const forward = data.vector.y
+        const turn = data.vector.x
+        if (forward > 0) {
+          this.movingForward = true;
+          this.movingBack = false;
+          this.forwardForce = Math.abs(forward)
+
+        } else if (forward < 0) {
+          this.movingForward = false;
+          this.movingBack = true;
+          this.forwardForce = Math.abs(forward)
+
+        }
+        if (turn > 0) {
+          this.movingRight = true;
+          this.movingLeft = false;
+          this.turnForce = Math.abs(turn)
+
+        } else if (turn < 0) {
+          this.movingRight = false;
+          this.movingLeft = true;
+          this.turnForce = Math.abs(turn)
+
+        }
+      })
+  
+    joyManager['0'].on('end', (evt) => {
+        this.movingBack = false;
+        this.movingForward = false;
+        this.movingLeft = false;
+        this.movingRight = false;
+      })
   }
 
   animate(self) {
@@ -147,7 +207,7 @@ export class IfcScene {
     this.camera.position.lerpVectors(this.camera.position, this.tempCamToPos, 0.1);
 
     this.camera.quaternion.copy(this.followCamPivot.quaternion);
-
+  
     self.renderer.render(self.scene, self.camera);
     requestAnimationFrame(function () {
       self.animate(self);
@@ -171,26 +231,34 @@ export class IfcScene {
 
     if(this.movingForward) {
       moving = true
-      direction = angleToRotate;
     }
 
-    if(this.movingRight) {
-      moving = true
-      angleToRotate -=Math.PI/2
-      direction = angleToRotate;
-    }
-
-    if(this.movingLeft) {
-      moving = true
-      angleToRotate +=Math.PI/2
-      direction = angleToRotate;
-    }
 
     if(this.movingBack) {
       moving = true
       angleToRotate +=Math.PI
-      direction = angleToRotate;
     }
+
+    if(this.movingRight) {
+      moving = true
+      if (this.movingBack) {
+        angleToRotate +=this.turnForce
+      } else {
+        angleToRotate -=this.turnForce
+      }
+    }
+
+    if(this.movingLeft) {
+      moving = true
+      if (this.movingBack) {
+        angleToRotate -=this.turnForce
+      } else {
+        angleToRotate +=this.turnForce
+      }
+    }
+
+    direction = angleToRotate;
+
     if (moving) {
       if(angleToRotate > Math.PI) {
         direction = angleToRotate - 2 * Math.PI

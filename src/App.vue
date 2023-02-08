@@ -70,7 +70,7 @@
 
 <script>
 import Model from './components/Model.vue';
-import { ThreeJsPlugin } from '@superviz/threejs-plugin';
+import { ThreeJsPlugin } from '../../threejs-adapter/src';
 import * as THREE from 'three';
 
 import SuperViz, {
@@ -322,6 +322,7 @@ export default {
 main {
   width: 100%;
   height: 100%;
+  position: fixed;
 
   header {
     padding: 12px;

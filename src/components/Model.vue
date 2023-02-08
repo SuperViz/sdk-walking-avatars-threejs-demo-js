@@ -5,6 +5,9 @@
       {{ entityData }}
     </p>
     <canvas id="model" />
+    <div id="mobileInterface" class="noSelect">
+      <div id="joystickWrapper1"></div>
+    </div>
   </section>
 </template>
 
@@ -108,4 +111,30 @@ export default {
   bottom: 0%;
   z-index: 100;
 }
+#mobileInterface {
+  position: fixed;
+  width: calc(100% - 20px);
+  height: 50vh;
+  pointer-events: none;
+  z-index: 11;
+  top: auto;
+  bottom: 120px;
+  left: 10px;
+  touch-action: manipulation;
+}
+#joystickWrapper1 {
+    z-index: 5000 !important;
+    pointer-events: auto;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: transparent;
+    width: 120px;
+    height: 120px;
+    z-index: 12;
+    touch-action: manipulation;
+    background-color: rgba(red, 0.2);
+  }
+
 </style>
