@@ -26,7 +26,7 @@
           <!--          <sv-checkbox label="is audience" v-model="isAudience" />-->
           <!--          <sv-checkbox label="is broadcasting" v-model="isBroadcasting" />-->
           <sv-checkbox label="enable avatars" v-model="isAvatarsEnabled" />
-          <sv-checkbox label="enable pointers" v-model="isPointersEnabled" />
+          <sv-checkbox label="enable laser" v-model="isPointersEnabled" />
           <sv-checkbox label="render local avatar" v-model="renderLocalAvatar" />
           <sv-checkbox label="enable name" v-model="isNameEnabled" />
 
@@ -71,6 +71,7 @@
 <script>
 import Model from './components/Model.vue';
 import { ThreeJsPlugin } from '@superviz/threejs-plugin';
+
 import * as THREE from 'three';
 
 import SuperViz, {
@@ -229,10 +230,11 @@ export default {
         avatarConfig: {
           scale: this.avatarScale,
           height: this.avatarHeight,
-          pointerOrigin: { x: 0.25, y: 0.1, z: 0 }
+          laserOrigin: { x: 0.25, y: 0.1, z: 0 }
         },
         isAvatarsEnabled: this.isAvatarsEnabled,
-        isPointersEnabled: this.isPointersEnabled,
+        isLaserEnabled: this.isPointersEnabled,
+        isMouseEnabled: true,
         renderLocalAvatar: this.renderLocalAvatar,
         isNameEnabled: this.isNameEnabled
       });
