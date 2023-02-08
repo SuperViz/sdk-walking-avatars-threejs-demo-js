@@ -24,7 +24,7 @@ export default class IfcManager {
     async setupIfcLoader() {
         let self = this;
         //self.ifcLoader.ifcManager.setWasmPath("../../public/IFCjs/")
-        await self.ifcLoader.ifcManager.useWebWorkers(true, "../../public/IFCjs/IFCWorker.js")
+        await self.ifcLoader.ifcManager.useWebWorkers(true, "/IFCjs/IFCWorker.js")
         self.ifcLoader.ifcManager.applyWebIfcConfig({
             COORDINATE_TO_ORIGIN: false,
             USE_FAST_BOOLS: true
