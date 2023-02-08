@@ -70,7 +70,7 @@
 
 <script>
 import Model from './components/Model.vue';
-import { ThreeJsPlugin } from '../../threejs-adapter/src';
+import { ThreeJsPlugin } from '@superviz/threejs-plugin';
 import * as THREE from 'three';
 
 import SuperViz, {
