@@ -62,7 +62,6 @@ export default {
     async loadIFC () {
       let self = this
       self.IFCManager.scene.ifcModel = await self.IFCManager.ifcLoader.loadAsync(this.modelUrl);
-      console.log('model', self.IFCManager.scene.ifcModel)
       const matrixArr = await self.IFCManager.ifcLoader.ifcManager.ifcAPI.GetCoordinationMatrix(self.IFCManager.scene.ifcModel.modelID);
       const matrix = new Matrix4().fromArray(matrixArr);
       self.IFCManager.ifcLoader.ifcManager.setupCoordinationMatrix(matrix);

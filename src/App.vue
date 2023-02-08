@@ -59,7 +59,7 @@
     <Model
       class='model'
       :class="{ 'transparent': !isLoaded}"
-      modelUrl="https://raw.githubusercontent.com/andrewisen/bim-whale-ifc-samples/main/LargeBuilding/IFC/LargeBuilding.ifc"
+      modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/AC20-FZK-Haus.ifc"
       @loaded="onModelLoaded"
       @loading="onLoading"
       :player="player"

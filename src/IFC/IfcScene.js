@@ -36,7 +36,7 @@ export class IfcScene {
     this.renderer.outputEncoding = sRGBEncoding;
 
     this.renderer.setSize(this.width, this.height);
-    this.grid = new GridHelper();
+    this.grid = new GridHelper(50,50);
     this.scene.background = new Color(0x8cc7de);
 
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -54,10 +54,13 @@ export class IfcScene {
 
     this.followCamPivot = new Object3D()
     this.followCamPivot.rotation.order = 'YXZ'
+    this.followCamPivot.rotation.set(-0.5,-0.5,0)
     this.followCam = new Object3D()
     this.tempCamToPos = new Vector3(0,0,0)
-    this.followCam.position.z = 3
+    this.followCam.position.z = 8
     this.followCam.position.y = 1
+
+    this.player.position.set(-3,0,3)
 
 
     this.followCamPivot.add(this.followCam)
@@ -232,6 +235,7 @@ export class IfcScene {
 
   add(obj) {
     this.scene.add(obj);
+    /*
     let i = 0
     // fixes IFC materials flickering
     obj.material.forEach((mat) => {
@@ -242,6 +246,7 @@ export class IfcScene {
         mat.side = 1
       }
     })
+    */
 
   }
 
