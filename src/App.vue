@@ -59,7 +59,7 @@
     <Model
       class='model'
       :class="{ 'transparent': !isLoaded}"
-      modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/AC20-FZK-Haus.ifc"
+      modelUrl="https://superviz2homologmediaserver.s3.amazonaws.com/static/models/BasicHouse.ifc"
       @loaded="onModelLoaded"
       @loading="onLoading"
       :player="player"
