@@ -60,7 +60,7 @@ export class IfcScene {
     this.followCam.position.z = 8
     this.followCam.position.y = 1
 
-    this.player.position.set(-3,0,3)
+    this.player.position.set(6,0,6)
 
 
     this.followCamPivot.add(this.followCam)
