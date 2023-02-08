@@ -1,4 +1,4 @@
-# SuperViz + Three Vue.js DEMO
+# SuperViz + Three Vue.js VUE DEMO
 
 
 <p align="center">

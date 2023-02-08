@@ -547,12 +547,13 @@
   integrity sha512-1G78XUV70z7caKRtOZqEcFJrifLAI9F1YXfBRu5T+2/Nj1tjMowP+2GUUr1bWGtXSpgj1ek4FtycfuEBPQCr7w==
 
 "@superviz/threejs-plugin@beta":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@superviz/threejs-plugin/-/threejs-plugin-0.7.0.tgz#f3df37756270487dc09f1201862890940bb6e899"
-  integrity sha512-IzGIlSH2uwwLEn6GS9cxOdY5Uj94DRZyUNdiOODY0KeSk5kKkXgsRXWCE+qf6cupIW1sLHVOBpyLwVZxK6EwCQ==
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@superviz/threejs-plugin/-/threejs-plugin-0.8.0.tgz#2bfdb05600d87ec6069b3f0bd0bc659681eab2c4"
+  integrity sha512-Pkqr1Q9UmixOOv80wC5Rrs2qJlEZnlD8g+kXme3AwJTBBfqI6dEjuh4Ue9IIVzaJxJ/ow/DOtMAqYPoZBg4E8w==
   dependencies:
     three "^0.147.0"
     three-mesh-bvh "^0.5.23"
+    three-spritetext "^1.7.1"
 
 "@szmarczak/http-timer@^4.0.5":
   version "4.0.6"
@@ -1873,6 +1874,11 @@ three-mesh-bvh@^0.5.23:
   version "0.5.23"
   resolved "https://registry.yarnpkg.com/three-mesh-bvh/-/three-mesh-bvh-0.5.23.tgz#08e5b629144b48b11acbd433519680e457d398ed"
   integrity sha512-nyk+MskdyDgECqkxdv57UjazqqhrMi+Al9PxJN6yFtx1CTW4r0eCQ27FtyYKY5gCIWhxjtNfWYDPVy8lzx6LkA==
+
+three-spritetext@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/three-spritetext/-/three-spritetext-1.7.1.tgz#a75546d43d6600dba12f6e27e4dd63c796efd32b"
+  integrity sha512-iht/VGqEsDHgRIctA177wOW6x4IFiINihUxOen1U3lNVTrBdlJLCoA+DcnjMqi25vHu2P99asNGwtvG+iq3s2Q==
 
 three@^0.133.1:
   version "0.133.1"
