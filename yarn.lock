@@ -505,9 +505,9 @@
     debug "^4.3.4"
 
 "@superviz/sdk@beta":
-  version "2.23.2"
-  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.23.2.tgz#496f96bb65d9c746924b507da498f2f26fd7f3b3"
-  integrity sha512-tYJtYQDIfbekOgrg7caFQRsVpfBcix4Q4AKm2yMc5lQTWsiDyYBvMJz9EBlLFaxP5fhP20BTcKPRNItEy/aYEA==
+  version "2.23.3"
+  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.23.3.tgz#3dc80de9eac2df68553174164f935bfa8f88cdd4"
+  integrity sha512-qC3198HPD9Ir5VFB/YRf2hrFIvcbdn4DW7iGSi5NJHqjXzVH7uYgNmHOV0hUljB64xXZnp68+bUX5v2osjLMKA==
   dependencies:
     "@superviz/immersive-core" "^0.3.1"
     "@types/jest" "^28.1.3"

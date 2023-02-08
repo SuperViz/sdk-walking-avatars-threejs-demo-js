@@ -160,7 +160,7 @@ export default {
           },
         },
         roomId: this.roomId,
-        debug: true,
+        debug: false,
         camsOff: false,
         screenshareOff: false,
         isBroadcast: this.isBroadcasting,
