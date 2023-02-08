@@ -91,7 +91,7 @@ export class IfcScene {
         case 'KeyA':
         case 'ArrowLeft':
           this.movingLeft = true;
-          this.turnForce = -Math.PI/2;
+          this.turnForce = Math.PI/2;
           break;
         case 'KeyS':
         case 'ArrowDown':
