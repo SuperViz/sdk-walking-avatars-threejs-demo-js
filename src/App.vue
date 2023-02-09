@@ -21,16 +21,12 @@ import * as THREE from 'three';
 import SuperViz, {
   MeetingEvent,
   DeviceEvent,
-  MeetingState,
-  MeetingConnectionStatus,
 } from '@superviz/sdk';
-
-import bubble from './components/bubble.vue';
 
 const DEVELOPER_KEY = import.meta.env.VITE_SUPERVIZ_DEVELOPER_TOKEN;
 
 export default {
-  components: { bubble, Model },
+  components: { Model },
   name: 'App',
   data: () => ({
     isCollapsed: false,
@@ -39,9 +35,6 @@ export default {
     sdk: null,
     roomCustomNameInput: '',
     roomCustomName: '',
-    userList: '',
-    meetingState: MeetingState.FRAME_UNINITIALIZED,
-    connectionState: MeetingConnectionStatus.NOT_AVAILABLE,
     avatarUrl:
       'https://superviz2homologmediaserver.s3.amazonaws.com/static/models/PETE-GREAT3.glb',
     avatarThumbnail: '',
@@ -91,7 +84,7 @@ export default {
         debug: true,
         camsOff: false,
         screenshareOff: false,
-        shouldKickUsersOnHostLeave: true,
+        shouldKickParticipantsOnHostLeave: true,
         defaultAvatars: true,
         enableFollow: true,
         enableGather: true,
@@ -99,15 +92,9 @@ export default {
       });
       this.sdk.subscribe(MeetingEvent.MEETING_SAME_PARTICIPANT_ERROR, this.onSameAccoutError);
       this.sdk.subscribe(MeetingEvent.MEETING_DEVICES_CHANGE, this.onDevicesChange);
-      this.sdk.subscribe(MeetingEvent.MEETING_PARTICIPANT_LIST_UPDATE, this.onUserListUpdate);
-      this.sdk.subscribe(MeetingEvent.MEETING_STATE_UPDATE, this.onMeetingStateUpdate);
       this.sdk.subscribe(MeetingEvent.MY_PARTICIPANT_JOINED, this.onJoinedMeeting);
       this.sdk.subscribe(MeetingEvent.MEETING_LEAVE, this.onLeftMeeting);
 
-      this.sdk.subscribe(
-        MeetingEvent.MEETING_CONNECTION_STATUS_CHANGE,
-        this.onConnectionStatusChange,
-      );
       this.sdk.subscribe(MeetingEvent.DESTROY, this.onDestroy);
       const iframeMeetingSettings = document.getElementById("sv-video-frame");
 
@@ -120,7 +107,7 @@ export default {
     destroy() {
       clearInterval(this.walkingAnimationInterval)
       this.pluginInstance = null
-      this.sdk.disconnectAdapter();
+      this.sdk.unloadPlugin();
       this.sdk.destroy();
       this.sdk = null;
     },
@@ -133,19 +120,6 @@ export default {
     onDevicesChange(state) {
       if (state === DeviceEvent.DEVICES_BLOCKED) {
         alert('Please, allow the use of your camera and microphone to start the meeting');
-      }
-    },
-    onUserListUpdate(list) {
-      this.userList = list;
-    },
-    onMeetingStateUpdate(newState) {
-      this.meetingState = newState;
-    },
-    onConnectionStatusChange(newStatus) {
-      this.connectionState = newStatus;
-      if (newStatus === MeetingConnectionStatus.LOST_CONNECTION) {
-        alert('We lost you due to unstable connection, please try again');
-        this.destroy();
       }
     },
     async initialize3D() {
@@ -182,7 +156,7 @@ export default {
         Object.values(avatars)?.forEach((avatar) => {
           if (avatar && avatar.isMoving) {
             avatar.playAnimation('Walk')
-          } 
+          }
           if (avatar && !avatar.isMoving) {
             avatar.playAnimation('Idle')
           }
@@ -200,50 +174,12 @@ export default {
       this.initialize();
     },
     onLeftMeeting() {
-      console.warn('left meeting')
       clearInterval(this.walkingAnimationInterval)
       this.pluginInstance = null
       this.destroy();
     },
     onJoinedMeeting() {
       this.initialize3D();
-    },
-  },
-  computed: {
-    connectionStatusBubble() {
-      switch (this.connectionState) {
-        case MeetingConnectionStatus.GOOD:
-          return 'green';
-        case MeetingConnectionStatus.BAD:
-        case MeetingConnectionStatus.RECONNECTING:
-          return 'yellow';
-        default:
-          '';
-      }
-    },
-    connectionStatusTranslate() {
-      return MeetingConnectionStatus[this.connectionState];
-    },
-    meetingStateBubble() {
-      switch (this.meetingState) {
-        case MeetingState.FRAME_UNINITIALIZED:
-        case MeetingState.FRAME_INITIALIZING:
-        case MeetingState.FRAME_INITIALIZED:
-        case MeetingState.MEETING_CONNECTING:
-        case MeetingState.MEETING_INITIALIZING:
-          return 'yellow';
-        case MeetingState.MEETING_CONNECTED:
-        case MeetingState.MEETING_READY_TO_JOIN:
-          return 'green';
-        default:
-          '';
-      }
-    },
-    meetingStateTranslate() {
-      return MeetingState[this.meetingState];
-    },
-    disableInitializeButton() {
-      return this.sdk !== null;
     },
   },
 };
