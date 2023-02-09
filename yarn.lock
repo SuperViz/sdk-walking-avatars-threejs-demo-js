@@ -505,9 +505,9 @@
     debug "^4.3.4"
 
 "@superviz/sdk@beta":
-  version "2.23.3"
-  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.23.3.tgz#3dc80de9eac2df68553174164f935bfa8f88cdd4"
-  integrity sha512-qC3198HPD9Ir5VFB/YRf2hrFIvcbdn4DW7iGSi5NJHqjXzVH7uYgNmHOV0hUljB64xXZnp68+bUX5v2osjLMKA==
+  version "2.23.4"
+  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.23.4.tgz#5dc8f3757ef65bdb29d787c7204f58db3a036a10"
+  integrity sha512-PzixT1y5O8J4/hBIxs+Hv0haYVfdguyI+JHKpT6nCkv/K9Mh65T0f409fobO8AtfwRWyfo12ftOaKYNr58WWGg==
   dependencies:
     "@superviz/immersive-core" "^0.3.1"
     "@types/jest" "^28.1.3"
@@ -547,9 +547,9 @@
   integrity sha512-1G78XUV70z7caKRtOZqEcFJrifLAI9F1YXfBRu5T+2/Nj1tjMowP+2GUUr1bWGtXSpgj1ek4FtycfuEBPQCr7w==
 
 "@superviz/threejs-plugin@beta":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@superviz/threejs-plugin/-/threejs-plugin-0.8.0.tgz#2bfdb05600d87ec6069b3f0bd0bc659681eab2c4"
-  integrity sha512-Pkqr1Q9UmixOOv80wC5Rrs2qJlEZnlD8g+kXme3AwJTBBfqI6dEjuh4Ue9IIVzaJxJ/ow/DOtMAqYPoZBg4E8w==
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@superviz/threejs-plugin/-/threejs-plugin-0.11.0.tgz#0c62a5e0e39fc8bd53f71b9c5a6bbfa44023267b"
+  integrity sha512-x4D6orSNLCOT6GloixHbibtm6z5l00s9gdatWqglCiwp+yG+aRLgSQxueV5lhAvxd+Bx++4jqhWzUWnwDqLLRQ==
   dependencies:
     three "^0.147.0"
     three-mesh-bvh "^0.5.23"
@@ -641,15 +641,10 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
   integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
 
-"@types/node@*":
-  version "18.7.16"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.7.16.tgz#0eb3cce1e37c79619943d2fd903919fc30850601"
-  integrity sha512-EQHhixfu+mkqHMZl1R2Ovuvn47PUw18azMJOTwSZr9/fhzHNGXAJ0ma0dayRVchprpCj0Kc1K1xKoWaATWF1qg==
-
-"@types/node@^18.7.15":
-  version "18.11.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.18.tgz#8dfb97f0da23c2293e554c5a50d61ef134d7697f"
-  integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
+"@types/node@*", "@types/node@^18.7.15":
+  version "18.13.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.13.0.tgz#0400d1e6ce87e9d3032c19eb6c58205b0d3f7850"
+  integrity sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==
 
 "@types/responselike@^1.0.0":
   version "1.0.0"
