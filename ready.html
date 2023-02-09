@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<title>Superviz ThreeJS VUE Demo</title>
+	<link rel="icon" href="modules/public/images/favicon.png" />
+	<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+	<link rel="stylesheet" href="https://production.storage.superviz.com/demos/assets/css/main.css">
+	<script type="module" src="./modules/demo/demo.js"></script>
+	<script type="module" src="https://production.storage.superviz.com/demos/components/index.js"></script>
+	<script type="module" src="https://unpkg.com/@superviz/sdk@beta"></script>
+</head>
+
+<body>
+
+    <script type="module" src="/src/main.js"></script>
+	<div class="wrapper" id="info">
+		<div class="content">
+			<sv-demo-logo id="sv-demo-logo" name="https://production.cdn.superviz.com/static/superviz-white-logo.svg">
+			</sv-demo-logo>
+			<div class="content-wrapper">
+				<div class="text-side-ready">
+					<sv-demo-image id="sv-demo-image"
+						name="https://production.cdn.superviz.com/static/threejs-icon-set.png"></sv-demo-image>
+					<sv-demo-title-left id="sv-demo-title" name="Your meeting has been created.">
+					</sv-demo-title-left>
+					<div id="loader-ms" class="loader-wrapper">
+						<div class="loader"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="app"></div>
+</body>
+<style>
+	.loader-wrapper {
+		margin-top: 16px;
+	}
+	.loader {
+		border: 4px solid #6210CC;
+		border-top: 4px solid #C1FBDF;
+		border-radius: 50%;
+		width: 60px;
+		height: 60px;
+		animation: spin 1s linear infinite;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	@media screen and (max-width: 935px) {
+		.wrapper {
+			display: none;
+		}
+	}
+</style>
+
+</html>

@@ -1,61 +1,5 @@
 <template>
   <main id="main">
-    <header>
-      <img src="https://dev.cdn.superviz.com/static/logo-superviz.svg" alt="SuperViz logo" />
-      <sv-heading size="h3">SDK Demo</sv-heading>
-    </header>
-    <section :class="{ hidden: isCollapsed }">
-      <aside>
-        <div class="collapse-button">
-          <sv-button icon size="lg" theme="over-image-yellow" @click="isCollapsed = !isCollapsed">
-            <sv-icon :icon="isCollapsed ? 'right' : 'left'" />
-          </sv-button>
-        </div>
-
-        <form>
-          <sv-heading size="h6">Room info</sv-heading>
-          <sv-input label="Room ID" v-model="roomId" />
-          <sv-heading size="h6">User info</sv-heading>
-          <sv-input label="User id" v-model="userId" />
-          <sv-input label="User name" v-model="userName" />
-          <sv-input label="Avatar url" v-model="avatarUrl" />
-          <sv-input label="Avatar thumbnail" v-model="avatarThumbnail" />
-          <sv-input type="number" label="Avatar scale" v-model="avatarScale" />
-          <sv-input type="number" label="Avatar height" v-model="avatarHeight" />
-          <sv-checkbox label="is host candidate" v-model="isHostCandidate" />
-          <!--          <sv-checkbox label="is audience" v-model="isAudience" />-->
-          <!--          <sv-checkbox label="is broadcasting" v-model="isBroadcasting" />-->
-          <sv-checkbox label="enable avatars" v-model="isAvatarsEnabled" />
-          <sv-checkbox label="enable laser" v-model="isPointersEnabled" />
-          <sv-checkbox label="render local avatar" v-model="renderLocalAvatar" />
-          <sv-checkbox label="enable name" v-model="isNameEnabled" />
-
-          <sv-button-group wrap>
-            <sv-button @click="initialize" :disabled="disableInitializeButton" full-width
-              >Initialize SDK</sv-button
-            >
-            <sv-button @click="destroy" :disabled="!sdk" full-width>Destroy SDK</sv-button>
-          </sv-button-group>
-        </form>
-        <sv-hr />
-        <sv-heading size="h6">Meeting state</sv-heading>
-        <div class="status">
-          <bubble :type="connectionStatusBubble" />
-          <sv-paragraph>Connection status: {{ connectionStatusTranslate }}</sv-paragraph>
-        </div>
-        <div class="status">
-          <bubble :type="meetingStateBubble" />
-          <sv-paragraph>Meeting state: {{ meetingStateTranslate }}</sv-paragraph>
-        </div>
-
-        <sv-hr />
-
-        <sv-heading size="h6">User list</sv-heading>
-        <tree-view :data="userList"></tree-view>
-      </aside>
-      <sv-progress-circular v-if="!isLoaded" class="progress" color="sv-color-original-primary" :indeterminate="true"/>
-    </section>
-  
     <Model
       class='model'
       :class="{ 'transparent': !isLoaded}"
@@ -90,13 +34,7 @@ export default {
   name: 'App',
   data: () => ({
     isCollapsed: false,
-
-    userId: '',
     userName: null,
-    isHostCandidate: true,
-    isAudience: false,
-    isBroadcasting: false,
-
     roomId: '',
     sdk: null,
     roomCustomNameInput: '',
@@ -109,7 +47,7 @@ export default {
     avatarThumbnail: '',
     avatarScale: '0.01',
     avatarHeight: '0.9',
-    isPointersEnabled: false,
+    isPointersEnabled: true,
     isAvatarsEnabled: true,
     camera: null,
     scene: null,
@@ -120,56 +58,44 @@ export default {
     manager: null,
     progress: 0,
     isLoaded: false,
-    walkingAnimationInterval: null
+    walkingAnimationInterval: null,
+    userType: '',
   }),
   beforeMount () {
     this.player = new THREE.Object3D();
   },
   mounted() {
     const url = new URL(window.location.href);
-    this.userId = url.searchParams.get('userId') || '';
     this.roomId = url.searchParams.get('roomId') || '';
-    this.userName = url.searchParams.get('userName') || '';
+    this.userName = url.searchParams.get('user-name') || 'guest';
+    this.userType = url.searchParams.get('user-type');
+  },
 
-  },
-  watch: {
-    isAudience(value) {
-      if (this.isHostCandidate && value) {
-        this.isHostCandidate = false;
-      }
-    },
-    isHostCandidate(value) {
-      if (this.isAudience && value) {
-        this.isAudience = false;
-      }
-    },
-  },
   methods: {
     async initialize() {
       this.sdk = await SuperViz.init(DEVELOPER_KEY, {
         group: {
-          id: 'your-organizationId',
-          name: 'developer workspace',
+          id: "<GROUP-ID>",
+          name: "<GROUP-NAME>"
         },
         participant: {
-          id: this.userId,
+          id: Date.now().toPrecision(20),
           name: this.userName,
-          type: this.isHostCandidate ? 'host' : 'guest',
+          type: this.userType,
           avatar: {
             model: this.avatarUrl,
             thumbnail: this.avatarThumbnail,
           },
         },
         roomId: this.roomId,
-        debug: false,
+        debug: true,
         camsOff: false,
         screenshareOff: false,
-        isBroadcast: this.isBroadcasting,
         shouldKickUsersOnHostLeave: true,
         defaultAvatars: true,
         enableFollow: true,
-        enableGoTo: true,
         enableGather: true,
+        enableGoTo: true,
       });
       this.sdk.subscribe(MeetingEvent.MEETING_SAME_PARTICIPANT_ERROR, this.onSameAccoutError);
       this.sdk.subscribe(MeetingEvent.MEETING_DEVICES_CHANGE, this.onDevicesChange);
@@ -183,11 +109,15 @@ export default {
         this.onConnectionStatusChange,
       );
       this.sdk.subscribe(MeetingEvent.DESTROY, this.onDestroy);
+      const iframeMeetingSettings = document.getElementById("sv-video-frame");
 
-      this.isCollapsed = true;
+      // verify if meeting settings iframe is loaded
+      iframeMeetingSettings.addEventListener("load", function () {
+          document.getElementById("loader-ms").style.display = "none";
+          document.getElementById("info").style.display = "none";
+      });
     },
     destroy() {
-      console.log('destroy')
       clearInterval(this.walkingAnimationInterval)
       this.pluginInstance = null
       this.sdk.disconnectAdapter();
@@ -267,6 +197,7 @@ export default {
       this.camera = manager.scene.camera;
       this.scene = manager.scene.scene;
       this.manager = manager;
+      this.initialize();
     },
     onLeftMeeting() {
       console.warn('left meeting')
@@ -419,7 +350,7 @@ main {
   width: 100vw;
   height: 100%;
   left: 0;
-  top: 12px;
+  top: 0px;
   opacity: 1;
   &.transparent {
     opacity: 0 !important;
