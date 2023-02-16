@@ -1,0 +1,152 @@
+#modal-message-web-browsers {
+    display: none;
+    height: 100%;
+    overflow: hidden;
+    justify-content: space-between;
+    flex-flow: column;
+    margin: auto;
+    font-family: 'Roboto';
+    background-color: rgba(217, 217, 217, 0.8);
+    position: absolute;
+    width: 100%;
+}
+
+.modal-content {
+    justify-content: space-between;
+    flex-flow: column;
+    display: flex;
+    margin: auto;
+}
+
+.modal-box {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    width: 334px;
+    background-color: #ffffff;
+    height: 222px;
+    border-radius: 15px;
+    padding: 24px 18px 38px;
+}
+
+#sv-demo-modal-sub-title {
+    text-align: center;
+    color: #57535F;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    margin: 0px;
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+input.sv-demo-invite-input {
+    width: 276px;
+    margin: 0px;
+}
+
+#check-copy {
+    display: none;
+}
+
+#sv-modal-title {
+    padding-bottom: 4px;
+}
+
+.tooltip {
+    position: relative;
+}
+
+.tooltip span {
+    visibility: hidden;
+    width: 5em;
+    background-color: #57535f;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 9;
+    FONT-FAMILY: 'roboto';
+    top: 25px;
+    FONT-SIZE: 12PX;
+    left: 73%;
+    margin-left: 1em;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tooltip span::after {
+    content: "";
+    position: absolute;
+    top: -0.5em;
+    border-width: 4px;
+    border-style: solid;
+    border-color: transparent transparent #57535f transparent;
+}
+
+input#check-copy {
+    display: none;
+}
+
+.tooltip input:checked+span {
+    visibility: visible;
+    opacity: 1;
+}
+
+@media screen and (max-width: 935px) {
+    .box-side-guest {
+        margin-left: 0px;
+    }
+    #modal-message-web-browsers {
+        max-width: 100%;
+        display: none;
+        background-color: rgba(217, 217, 217, 0.8);
+        position: absolute;
+        width: 100%;
+    }
+
+    .box-side {
+        place-self: center;
+        margin-top: 36px;
+        width: 345px;
+        height: 248px;
+        padding: 1px;
+        border-radius: 10px;
+        margin-left: 0px;
+    }
+
+    .modal-box {
+        width: 100%;
+        padding: 24px 12px 24px;
+        max-width: 334px;
+        min-width: 264px;
+    }
+
+    #sv-modal-title {
+        padding-top: 0px;
+        max-width: 100%;
+    }
+
+    .invite-input {
+        width: 100%;
+    }
+
+    input.sv-demo-invite-input {
+        width: 100%;
+    }
+
+    .tooltip {
+        width: 100%;
+        display: flex;
+    }
+
+    .modal-content {
+        flex-flow: nowrap;
+    }
+
+    .tooltip span {
+        top: 38px;
+        left: 73%;
+    }
+}
