@@ -76,7 +76,6 @@ import SuperViz, {
   MeetingState,
   MeetingConnectionStatus,
 } from '@superviz/sdk';
-// } from '../../sdk/dist';
 
 import bubble from './components/bubble.vue';
 
