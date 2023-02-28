@@ -59,8 +59,3 @@ To start the demo you must fill in the fields below:
 * Enable Avatars: enable or disable avatar creation;
 * Enable Pointers: enable or disable pointer (if avatars are disabled, `isPointersEnabled` is forced to false);
 
-
-
-### Example:
-
-![image](https://user-images.githubusercontent.com/49524331/202759577-562ed255-49fd-4dd8-826d-2babb2b59522.png)
