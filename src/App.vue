@@ -76,7 +76,6 @@ import SuperViz, {
   MeetingState,
   MeetingConnectionStatus,
 } from '@superviz/sdk';
-//} from '../../sdk_/dist';
 
 import bubble from './components/bubble.vue';
 
@@ -141,15 +140,14 @@ export default {
   methods: {
     async initialize() {
       this.sdk = await SuperViz.init(DEVELOPER_KEY, {
-        userGroup: {
+        group: {
           id: 'your-organizationId',
           name: 'developer workspace',
         },
-        user: {
+        participant: {
           id: this.userId,
           name: this.userName,
-          isHostCandidate: this.isHostCandidate,
-          isAudience: this.isAudience,
+          type: this.isHostCandidate ? 'host' : 'guest',
           avatar: {
             model: this.avatarUrl,
             thumbnail: this.avatarThumbnail,
@@ -159,11 +157,12 @@ export default {
         debug: true,
         camsOff: false,
         screenshareOff: false,
-        isBroadcast: this.isBroadcasting,
         shouldKickUsersOnHostLeave: true,
-        defaultAvatars: true,
+        defaultAvatars: this.defaultAvatars,
         enableFollow: true,
         enableGoTo: true,
+        enableGather: true,
+        environment: 'dev',
       });
       this.sdk.subscribe(MeetingEvent.MEETING_SAME_USER_ERROR, this.onSameAccoutError);
       this.sdk.subscribe(MeetingEvent.MEETING_DEVICES_CHANGE, this.onDevicesChange);
@@ -336,6 +335,7 @@ main {
 
   section.hidden {
     grid-template-columns: 0 1fr;
+    display: none;
 
     aside {
       padding: 0;

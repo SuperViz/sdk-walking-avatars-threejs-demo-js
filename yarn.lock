@@ -525,10 +525,10 @@
   dependencies:
     debug "^4.3.4"
 
-"@superviz/sdk@2.17.1-rc.1":
-  version "2.17.1-rc.1"
-  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-2.17.1-rc.1.tgz#2b5f97d983d2b92ee53d453db7c9e647535123d1"
-  integrity sha512-KeynYo40sZPxgyGuFq37uF1457e0mYTwmtnL8sNSZnQeYW/DdIW5vqVHmkOOzNzMebG4qwW8uGYAaY9aus7tUg==
+"@superviz/sdk@3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@superviz/sdk/-/sdk-3.2.2.tgz#5af602ada59b5ad392be1962bb8335a0a575d2ca"
+  integrity sha512-fdsfLDk31yCxBSPJ4AUCgUHum1Aoga+Yfj5JQ5zVMBEmnRhVvhs9iYWkKHw1qKJxAmFeGQcKe+6mAA0/bprL7w==
   dependencies:
     "@superviz/immersive-core" "^0.3.1"
     "@types/jest" "^28.1.3"
@@ -542,6 +542,7 @@
     lodash.debounce "^4.0.8"
     lodash.isequal "^4.5.0"
     nosleep.js "^0.12.0"
+    semantic-release-version-file "^1.0.2"
 
 "@superviz/sv-components@^0.12.57":
   version "0.12.57"
@@ -567,10 +568,10 @@
   resolved "https://registry.yarnpkg.com/@superviz/sv-icons/-/sv-icons-0.6.0.tgz#5ef722b2c88db3d39042a37b4cbdd94a64940acc"
   integrity sha512-1G78XUV70z7caKRtOZqEcFJrifLAI9F1YXfBRu5T+2/Nj1tjMowP+2GUUr1bWGtXSpgj1ek4FtycfuEBPQCr7w==
 
-"@superviz/threejs-adapter@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@superviz/threejs-adapter/-/threejs-adapter-0.0.5.tgz#64339e809c9fce6fc44ac03a206d153422b02d48"
-  integrity sha512-y2zoaWvxFKFUIAE7Xyfrjz441/3gwAdcL89/4w6Y/NyIXVXqGD+zYy+RZgBzm9Q1j7p7fsta140p8xQ90lS0Xg==
+"@superviz/threejs-adapter@^0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@superviz/threejs-adapter/-/threejs-adapter-0.0.11.tgz#91465694d4dd485d3239e3d40c02a80666603b39"
+  integrity sha512-Twtji/k+ZHoL7C8YYAcETsqD37WB8X8IPlndCyWM15BmbU7oXmBLjap3RYPZ4TcSamV4ppx5W0z/kuR2a5L+jg==
   dependencies:
     three "^0.147.0"
 
@@ -1860,6 +1861,11 @@ sass@^1.53.0:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
     source-map-js ">=0.6.2 <2.0.0"
+
+semantic-release-version-file@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/semantic-release-version-file/-/semantic-release-version-file-1.0.2.tgz#d83f13336ba968e0e2c4fcf769e1fcad26e2200c"
+  integrity sha512-/kf9hqGfy0iceKDC1dXGKajKXYfDEHlGFynIaoXOTUv3szlZ4Io2i+7sLl46y4Fv2DCKLeM+3sC/0IWxsgpL9A==
 
 semver@^6.3.0:
   version "6.3.0"
