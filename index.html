@@ -1,13 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="public/images/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>SuperViz | SDK Demo</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+    <meta charset="UTF-8">
+    <title>Superviz ThreeJS VUE Demo</title>
+    <link rel="icon" href="modules/public/images/favicon.png" />
+    <link rel="stylesheet" href="https://production.storage.superviz.com/demos/assets/css/main.css">
+	<link rel="stylesheet" href="./modules/public/css/modal-block.css">
+    <script type="module" src="./modules/demo/demo.js"></script>
+    <script type="module" src="https://production.storage.superviz.com/demos/components/index.js"></script>
+</head>
+
+<body>
+	<div id="modal-message-web-browsers" class="modal-web-browsers">
+
+		<div class="modal-content">
+			<div class="modal-box">
+				<sv-demo-title-right id="sv-modal-title" name="Heads up">
+				</sv-demo-title-right>
+				<sv-demo-sub-title id="sv-demo-modal-sub-title"
+					name="We noticed that you accessed our demo using a non-standard browser. To properly view the content, please copy the link provided below and open it in either Safari or Chrome.">
+				</sv-demo-sub-title>
+
+				<div class="invite-input">
+					<label class="tooltip"><input type="text" class="sv-demo-invite-input" id="room-id"><input
+							id="check-copy" type="checkbox"><span>Copied</span>
+					</label>
+					<sv-demo-invite-button id="invite-url-button" name="&nbsp;&nbsp;&nbsp;">
+						<sv-demo-invite-image id="sv-demo-invite-image"
+							name="https://production.cdn.superviz.com/static/copy-icon.svg"></sv-demo-invite-image>
+					</sv-demo-invite-button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="wrapper">
+		<div class="content">
+			<sv-demo-logo name="https://production.cdn.superviz.com/static/superviz-white-logo.svg"></sv-demo-logo>
+			<div class="content-wrapper">
+				<div class="text-side">
+					<sv-demo-title-left name="Add multi-player interaction and walking avatars to your ifc.js 3D web viewer">
+					</sv-demo-title-left>
+				</div>
+				<div class="box-side">
+					<sv-demo-title-right name="Add your name to get started"></sv-demo-title-right>
+					<sv-demo-image name="https://production.cdn.superviz.com/static/avatar-name.png"></sv-demo-image>
+					<input type="text" class="sv-demo-input" id="username" />
+					<sv-demo-button name="NEXT" id="next"> </sv-demo-button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
 </html>

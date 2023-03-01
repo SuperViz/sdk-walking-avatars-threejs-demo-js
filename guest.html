@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+        <meta charset="UTF-8">
+        <title>Superviz ThreeJS VUE Demo</title>
+        <link rel="icon" href="modules/public/images/favicon.png" />
+        <link rel="stylesheet" href="https://production.storage.superviz.com/demos/assets/css/main.css">
+        <link rel="stylesheet" href="./modules/public/css/modal-block.css">
+        <script type="module" src="./modules/demo/demo.js"></script>
+        <script type="module" src="https://production.storage.superviz.com/demos/components/index.js"></script>
+    </head>
+
+<body>
+	<div id="modal-message-web-browsers" class="modal-web-browsers">
+
+		<div class="modal-content">
+			<div class="modal-box">
+				<sv-demo-title-right id="sv-modal-title" name="Heads up">
+				</sv-demo-title-right>
+				<sv-demo-sub-title id="sv-demo-modal-sub-title"
+					name="We noticed that you accessed our demo using a non-standard browser. To properly view the content, please copy the link provided below and open it in either Safari or Chrome.">
+				</sv-demo-sub-title>
+
+				<div class="invite-input">
+					<label class="tooltip"><input type="text" class="sv-demo-invite-input" id="room-id"><input
+							id="check-copy" type="checkbox"><span>Copied</span>
+					</label>
+					<sv-demo-invite-button id="invite-url-button" name="&nbsp;&nbsp;&nbsp;">
+						<sv-demo-invite-image id="sv-demo-invite-image"
+							name="https://production.cdn.superviz.com/static/copy-icon.svg"></sv-demo-invite-image>
+					</sv-demo-invite-button>
+				</div>
+			</div>
+		</div>
+	</div>
+    <div class="wrapper">
+        <div class="content">
+            <sv-demo-logo id="sv-demo-logo" name="https://production.cdn.superviz.com/static/superviz-white-logo.svg">
+            </sv-demo-logo>
+            <div class="content-wrapper">
+                <div class="text-side">
+                    <sv-demo-title-left id="sv-demo-title" name="You’re been invited to a SuperViz demo meeting">
+                    </sv-demo-title-left>
+                    <sv-demo-sub-title id="sv-demo-sub-title"
+                        name="The easiest way to bring people together inside of your 3D web applicaton">
+                    </sv-demo-sub-title>
+                    <sv-demo-guest-button id="join" name="NEXT">
+                    </sv-demo-guest-button>
+                </div>
+                <div class="box-side-guest">
+                    <div class="image-size">
+                        <sv-demo-guest-image class="image-size" id="sv-demo-guest-image"
+                            name="https://production.cdn.superviz.com/static/bg-guest.png">
+                        </sv-demo-guest-image>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
