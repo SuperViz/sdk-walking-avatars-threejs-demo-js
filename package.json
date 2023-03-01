@@ -1,0 +1,36 @@
+{
+  "name": "superviz-sdk-demo",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@superviz/sdk": "3.2.2",
+    "@superviz/sv-components": "^0.12.57",
+    "@superviz/sv-icons": "^0.6.0",
+    "@superviz/threejs-adapter": "^0.0.11",
+    "@vitejs/plugin-legacy": "^2.0.1",
+    "@vitejs/plugin-vue2": "^1.1.2",
+    "@vitejs/plugin-vue2-jsx": "^1.0.3",
+    "cannon-es": "^0.20.0",
+    "three": "^0.147.0",
+    "three-to-cannon": "^4.3.0",
+    "url": "^0.11.0",
+    "vite-plugin-vue2": "^2.0.2",
+    "vue": "^2.7.4",
+    "vue-json-tree-view": "^2.1.6",
+    "vue-template-compiler": "^2.7.10",
+    "web-ifc": "^0.0.36",
+    "web-ifc-three": "^0.0.121"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.3",
+    "prettier": "^2.7.1",
+    "sass": "^1.53.0",
+    "vite": "^2.9.9",
+    "vite-plugin-eslint": "^1.6.1"
+  }
+}
