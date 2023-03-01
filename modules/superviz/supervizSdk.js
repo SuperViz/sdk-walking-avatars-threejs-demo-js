@@ -21,7 +21,6 @@ export const supervizSdk = await SuperVizSdk.init(DEVELOPER_KEY, {
         },
     },
     roomId: roomId,
-    environment: 'dev',
     defaultAvatars: true,
     enableFollow: true,
     enableGoTo: true,
