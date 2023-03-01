@@ -7,15 +7,29 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 	<link rel="icon" href="modules/public/images/favicon.png" />
 	<script async src="./src/js/es-module-shims@1.3.6.js"></script>
+	<script async src="./src/js/threejs/nipplejs@0.10.0.js"></script>
+	<script type="importmap">
+		{
+			"imports": {
+				"three": "./src/js/threejs/three@0.149.0.js",
+				"three/addons/": "./src/js/threejs/examples/jsm/",
+				"three-mesh-bvh": "./src/js/threejs/three-mesh-bvh@0.5.23.js",
+				"web-ifc": "./src/js/threejs/web-ifc@0.0.39.js",
+				"web-ifc-three": "./src/js/threejs/web-ifc-three@0.0.122.js"
+			}
+		}
+		</script>
 	<link rel="stylesheet" href="https://production.storage.superviz.com/demos/assets/css/main.css">
+	<link rel="stylesheet" href="./modules/public/css/main.css">
 	<script type="module" src="./modules/demo/demo.js"></script>
 	<script type="module" src="https://production.storage.superviz.com/demos/components/index.js"></script>
-	<script type="module" src="./src/js/sdk/sdk@3.0.0.js"></script>
-</head>
+	<script type="module" src="./src/js/sdk/sdk@3.2.2.js"></script>
+	<script type="module" src="./src/js/plugins/threejs-plugin@0.11.0.js"></script>
+	<script type="module" src="./index.js"></script>
+	<script type="module" src="./modules/threejs/index.js"></script>
 
 <body>
 
-    <script type="module" src="/src/main.js"></script>
 	<div class="wrapper" id="info">
 		<div class="content">
 			<sv-demo-logo id="sv-demo-logo" name="https://production.cdn.superviz.com/static/superviz-white-logo.svg">
@@ -33,7 +47,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="app"></div>
+	<main id="main"></main>
 </body>
 <style>
 	.loader-wrapper {
