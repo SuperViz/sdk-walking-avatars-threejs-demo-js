@@ -71,6 +71,11 @@ const onJoinedMeeting = async () => {
             }
         })
     }, 5)
+
+    
+    amplitude.track("Enter example", {
+      exampleName: "walking-in-threejs-demo",
+    });
 }
 
 const onLeftMeeting = () => {
