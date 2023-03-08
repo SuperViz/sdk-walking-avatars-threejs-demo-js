@@ -10,6 +10,7 @@ let camera;
 let player;
 let manager;
 let walkingAnimationInterval;
+let isLoaded = false;
 
 // verify if meeting settings iframe is loaded
 iframeMeetingSettings.addEventListener("load", function() {
@@ -27,6 +28,7 @@ const onDevicesChange = (state) => {
 }
 
 const onJoinedMeeting = async () => {
+    document.querySelector('.loader-content-wrapper').setAttribute('style', 'opacity: 1')
     player = new Object3D();
     manager = await startScene(player);
     scene = manager.scene.scene;
@@ -61,6 +63,10 @@ const onJoinedMeeting = async () => {
         const avatars = threejsPluginInstance?.getAvatars()
         if (!avatars) {
             return
+        }
+        if (!isLoaded) {
+            isLoaded = true;
+            document.querySelector('.loader-content-wrapper').setAttribute('style', 'opacity: 0')
         }
         Object.values(avatars)?.forEach((avatar) => {
             if (avatar && avatar.isMoving) {
