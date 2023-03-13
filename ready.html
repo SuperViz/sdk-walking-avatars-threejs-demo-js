@@ -30,6 +30,11 @@
 	<script type="module" src="./modules/threejs/index.js"></script>
 
 <body>
+	<sv-modal>
+		<sv-modal-copy-link />
+	</sv-modal>
+	<div id="collapsedButtonInvite" class="collapse-button-invite opened">
+	</div>
 	<div class="loader-content-wrapper">
 		<div class="loader"></div>
 	</div>
@@ -53,6 +58,28 @@
 	<main id="main"></main>
 </body>
 <style>
+	#collapsedButtonInvite {
+		display: none;
+		z-index: 1;
+	}
+
+	.collapse-button-invite {
+		margin: 16px 0 0 16px;
+		border-radius: 20px;
+		cursor: pointer;
+		border: 0px;
+		background-repeat: no-repeat;
+		width: 34px;
+		height: 34px;
+		background-position: center;
+		background-color: #E9E5EF;
+		left: 8px;
+		position: absolute;
+		background-size: 18px;
+		background-position-x: 10px;
+		background-image: url(https://production.cdn.superviz.com/static/sdk-invite-icon.svg);
+	}
+
 	.loader-wrapper {
 		margin-top: 16px;
 	}

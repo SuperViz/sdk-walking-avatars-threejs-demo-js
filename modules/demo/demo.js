@@ -4,27 +4,7 @@ let userName = url.searchParams.get('user-name');
 let roomId = url.searchParams.get('roomId');
 
 document.addEventListener('DOMContentLoaded', () => {
-  let blockUserAppBrowser = false
-  const ua = window.navigator.userAgent || window.navigator.vendor || window.opera
-  const navigator = window.navigator
-  const normalizedUserAgent = ua.toLowerCase()
-  const isIOS =
-  /ip(ad|hone|od)/.test(normalizedUserAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
-
-  const isLinkedInApp = ((ua.indexOf("LinkedInApp") > -1))
-  const isFacebook = ((ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1))
-  const isWebViewUser = isLinkedInApp || isFacebook
-
-  if (isIOS && isWebViewUser) {
-    blockUserAppBrowser = true;
-    document.getElementById("modal-message-web-browsers").style.display = "flex";
-    try {
-      navigator.clipboard.writeText(document.URL);
-    } catch (err) {
-      console.error('Failed to copy: ', err);
-    }
-  }
-  setMeetingUrl(blockUserAppBrowser);
+  setMeetingUrl();
 })
 
 
@@ -58,14 +38,10 @@ document.getElementById("invite-url-button")?.addEventListener("click", (event) 
     }, 3000);
 });
 
-function setMeetingUrl(blockUser) { 
+function setMeetingUrl() { 
   const roomIdInput = document.getElementById('room-id')
   const url = new URL(document.URL)
 
-  if (blockUser) {
-    roomIdInput.value = url
-    return
-  }
   if(url.searchParams.get('user-type') === 'guest' && location.href.includes('ready.html')) return;
 
   if(url.searchParams.get('user-type') === 'guest' && !location.href.includes('guest.html')) {
